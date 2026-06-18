@@ -1,3 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    background: #111827;
+    padding: 25px;
+    border-bottom: 1px solid #334155;
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #cbd5e1;
+}
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px;
+}
+
+.hero-card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid #334155;
+}
+
+.hero-card h2 {
+    margin-bottom: 10px;
+}
+
+.hero-card p {
+    color: #cbd5e1;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.menu-button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.menu-button:hover {
+    background: #1d4ed8;
+}
+
+.menu-button:disabled {
+    background: #475569;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none;
+}
+
+.inspection-card {
+    background: #1e293b;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.inspection-card h2 {
+    margin-bottom: 20px;
+}
+
+.inspection-card label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+}
+
+#submitInspection {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#submitInspection:hover {
+    background: #15803d;
+}
+
+#statusMessage {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #22c55e;
 }
