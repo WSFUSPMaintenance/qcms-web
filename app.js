@@ -92,12 +92,21 @@ function loadInspection() {
         .addEventListener("click", submitInspection);
 }
 
+function cleanText(value) {
+    return String(value || "")
+        .replaceAll("|", "/")
+        .replaceAll("~", "-")
+        .replaceAll("\n", " ")
+        .replaceAll("\r", " ")
+        .trim();
+}
+
 function submitInspection() {
     const inspectionId = document.getElementById("inspectionSelect").value;
     const inspection = inspections.find(i => i.id === inspectionId);
     const status = document.getElementById("statusMessage");
 
-    const responses = [];
+    const responseLines = [];
 
     for (let index = 0; index < inspection.items.length; index++) {
         const itemNumber = index + 1;
@@ -115,23 +124,23 @@ function submitInspection() {
             return;
         }
 
-        responses.push({
-            checklistItemText: item.itemId,
-            requirementText: item.requirement,
-            response: response,
-            comment: comment
-        });
+        responseLines.push(
+            [
+                cleanText(item.itemId),
+                cleanText(item.requirement),
+                cleanText(response),
+                cleanText(comment)
+            ].join("|")
+        );
     }
 
-    const payload = {
-        formId: inspection.id,
-        formName: inspection.name,
-        department: inspection.department,
-        frequency: inspection.frequency,
-        responses: responses
-    };
-
-    const payloadText = JSON.stringify(payload);
+    const payloadText = [
+        `FORMID=${cleanText(inspection.id)}`,
+        `FORMNAME=${cleanText(inspection.name)}`,
+        `DEPARTMENT=${cleanText(inspection.department)}`,
+        `FREQUENCY=${cleanText(inspection.frequency)}`,
+        `RESPONSES=${responseLines.join("~")}`
+    ].join("\n");
 
     const formUrl =
         "https://forms.office.com/Pages/ResponsePage.aspx?id=3JG89IfD0E6e175TItrr8LO9tidJOFRAtBCVSjfTIJdUQUlVMkM4SEgxS1NPWTRZUUlRU1RXQkxLSS4u" +
