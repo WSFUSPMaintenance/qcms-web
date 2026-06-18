@@ -1,10 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>QCMS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCMS - QA Compliance Management System</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>QCMS</h1>
-    <p>QA Compliance Management System</p>
+
+    <header>
+        <h1>QA Compliance Management System</h1>
+        <p>Wayne Sanderson Farms - Union Springs</p>
+    </header>
+
+    <main>
+
+        <div class="hero-card">
+            <h2>Welcome to QCMS</h2>
+            <p>
+                Electronic compliance inspections, sanitation records,
+                QA verification, and audit documentation.
+            </p>
+        </div>
+
+        <div class="menu-grid">
+
+            <button class="menu-button" onclick="showInspection()">
+                Start Inspection
+            </button>
+
+            <button class="menu-button" disabled>
+                Open Inspections
+            </button>
+
+            <button class="menu-button" disabled>
+                Completed Inspections
+            </button>
+
+            <button class="menu-button" disabled>
+                QA Review
+            </button>
+
+        </div>
+
+        <div id="inspectionPanel" class="hidden">
+
+            <div class="inspection-card">
+
+                <h2>QCMS Inspection Test</h2>
+
+                <label>Department</label>
+
+                <select id="department">
+                    <option value="">Select Department</option>
+                    <option>QA</option>
+                    <option>Sanitation</option>
+                    <option>Maintenance</option>
+                    <option>Operations</option>
+                </select>
+
+                <h3>Floor Condition</h3>
+
+                <label>
+                    <input type="radio" name="floorCondition" value="Acceptable">
+                    Acceptable
+                </label>
+
+                <label>
+                    <input type="radio" name="floorCondition" value="Unacceptable">
+                    Unacceptable
+                </label>
+
+                <h3>Equipment Condition</h3>
+
+                <label>
+                    <input type="radio" name="equipmentCondition" value="Acceptable">
+                    Acceptable
+                </label>
+
+                <label>
+                    <input type="radio" name="equipmentCondition" value="Unacceptable">
+                    Unacceptable
+                </label>
+
+                <h3>Comments</h3>
+
+                <textarea
+                    id="comments"
+                    rows="5"
+                    placeholder="Enter comments here..."></textarea>
+
+                <button id="submitInspection">
+                    Submit Inspection
+                </button>
+
+                <div id="statusMessage"></div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+
 </body>
 </html>
