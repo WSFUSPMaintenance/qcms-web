@@ -8,87 +8,141 @@
 </head>
 <body>
 
-    <header>
-        <h1>QA Compliance Management System</h1>
-        <p>Wayne Sanderson Farms - Union Springs</p>
-    </header>
+<header>
+    <h1>QA Compliance Management System</h1>
+    <p>Wayne Sanderson Farms - Union Springs</p>
+</header>
 
-    <main>
+<main>
 
-        <div class="hero-card">
-            <h2>Welcome to QCMS</h2>
-            <p>
-                Electronic compliance inspections, sanitation records,
-                QA verification, and audit documentation.
-            </p>
-        </div>
+    <div class="hero-card">
+        <h2>Welcome to QCMS</h2>
+        <p>
+            Electronic compliance inspections, sanitation records,
+            QA verification, and audit documentation.
+        </p>
+    </div>
 
-        <div class="menu-grid">
+    <div class="menu-grid">
 
-            <button class="menu-button" onclick="showInspection()">
-                Start Inspection
-            </button>
+        <button class="menu-button" onclick="showInspection()">
+            Start Inspection
+        </button>
 
-            <button class="menu-button" disabled>
-                Open Inspections
-            </button>
+        <button class="menu-button" disabled>
+            Open Inspections
+        </button>
 
-            <button class="menu-button" disabled>
-                Completed Inspections
-            </button>
+        <button class="menu-button" disabled>
+            Completed Inspections
+        </button>
 
-            <button class="menu-button" disabled>
-                QA Review
-            </button>
+        <button class="menu-button" disabled>
+            QA Review
+        </button>
 
-        </div>
+    </div>
 
-        <div id="inspectionPanel" class="hidden">
+    <div id="inspectionPanel" class="hidden">
 
-            <div class="inspection-card">
+        <div class="inspection-card">
 
-                <h2>QCMS Inspection Test</h2>
+            <h2>Inspection Entry</h2>
 
-                <label>Department</label>
+            <label><strong>Select Inspection</strong></label>
 
-                <select id="department">
-                    <option value="">Select Department</option>
-                    <option>QA</option>
-                    <option>Sanitation</option>
-                    <option>Maintenance</option>
-                    <option>Operations</option>
-                </select>
+            <select id="inspectionSelect">
+                <option value="">Select Inspection</option>
+                <option value="AIR001">
+                    AIR001 - Air Curtains
+                </option>
+            </select>
 
-                <h3>Floor Condition</h3>
+            <div id="inspectionInfo" class="inspection-info hidden">
 
-                <label>
-                    <input type="radio" name="floorCondition" value="Acceptable">
-                    Acceptable
-                </label>
+                <h3>AIR001 - Air Curtains</h3>
 
-                <label>
-                    <input type="radio" name="floorCondition" value="Unacceptable">
-                    Unacceptable
-                </label>
+                <p>
+                    Department:
+                    <strong>Maintenance</strong>
+                </p>
 
-                <h3>Equipment Condition</h3>
+                <p>
+                    Frequency:
+                    <strong>Monthly</strong>
+                </p>
 
-                <label>
-                    <input type="radio" name="equipmentCondition" value="Acceptable">
-                    Acceptable
-                </label>
+            </div>
 
-                <label>
-                    <input type="radio" name="equipmentCondition" value="Unacceptable">
-                    Unacceptable
-                </label>
+            <div id="checklistContainer" class="hidden">
 
-                <h3>Comments</h3>
+                <div class="checklist-item">
 
-                <textarea
-                    id="comments"
-                    rows="5"
-                    placeholder="Enter comments here..."></textarea>
+                    <h3>
+                        1. Area thoroughly cleaned and free of dirt/debris
+                    </h3>
+
+                    <label>
+                        <input type="radio"
+                               name="item1"
+                               value="Pass">
+                        Pass
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="item1"
+                               value="Fail">
+                        Fail
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="item1"
+                               value="N/A">
+                        N/A
+                    </label>
+
+                    <textarea
+                        id="comment1"
+                        rows="3"
+                        placeholder="Comments"></textarea>
+
+                </div>
+
+                <div class="checklist-item">
+
+                    <h3>
+                        2. Air curtains in good repair
+                    </h3>
+
+                    <label>
+                        <input type="radio"
+                               name="item2"
+                               value="Pass">
+                        Pass
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="item2"
+                               value="Fail">
+                        Fail
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="item2"
+                               value="N/A">
+                        N/A
+                    </label>
+
+                    <textarea
+                        id="comment2"
+                        rows="3"
+                        placeholder="Comments"></textarea>
+
+                </div>
 
                 <button id="submitInspection">
                     Submit Inspection
@@ -100,9 +154,11 @@
 
         </div>
 
-    </main>
+    </div>
 
-    <script src="app.js"></script>
+</main>
+
+<script src="app.js"></script>
 
 </body>
 </html>
