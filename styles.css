@@ -75,11 +75,6 @@ main {
     background: #1d4ed8;
 }
 
-.menu-button:disabled {
-    background: #475569;
-    cursor: not-allowed;
-}
-
 .hidden {
     display: none;
 }
@@ -136,7 +131,8 @@ main {
 
 .checklist-item,
 .inspection-list-card,
-.response-card {
+.response-card,
+.qa-action-card {
     background: #111827;
     border: 1px solid #334155;
     border-radius: 10px;
@@ -146,7 +142,8 @@ main {
 
 .checklist-item h3,
 .inspection-list-card h3,
-.response-card h3 {
+.response-card h3,
+.qa-action-card h3 {
     margin-bottom: 15px;
     line-height: 1.4;
 }
@@ -225,8 +222,9 @@ input[type="radio"] {
     color: #fef2f2;
 }
 
-.detail-button {
-    background: #2563eb;
+.detail-button,
+.approve-button,
+.reject-button {
     color: white;
     border: none;
     border-radius: 10px;
@@ -235,10 +233,31 @@ input[type="radio"] {
     font-weight: bold;
     cursor: pointer;
     margin-top: 14px;
+    margin-right: 10px;
+}
+
+.detail-button {
+    background: #2563eb;
 }
 
 .detail-button:hover {
     background: #1d4ed8;
+}
+
+.approve-button {
+    background: #16a34a;
+}
+
+.approve-button:hover {
+    background: #15803d;
+}
+
+.reject-button {
+    background: #dc2626;
+}
+
+.reject-button:hover {
+    background: #b91c1c;
 }
 
 .response-pass {
@@ -247,6 +266,7 @@ input[type="radio"] {
 
 .response-fail {
     border-left: 6px solid #ef4444;
+    background: #1f1111;
 }
 
 .response-na {
@@ -259,4 +279,9 @@ input[type="radio"] {
     border-radius: 10px;
     padding: 20px;
     color: #cbd5e1;
+}
+
+.qa-message {
+    margin-top: 15px;
+    font-weight: bold;
 }
