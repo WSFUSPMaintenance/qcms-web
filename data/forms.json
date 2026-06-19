@@ -1,8 +1,282 @@
 [
   {
+    "id": "OHD001",
+    "name": "1st Processing Overhead",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "OHD002",
+    "name": "2nd Processing Overhead",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
     "id": "AIR001",
     "name": "Air Curtains",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "BCH001",
+    "name": "Box Chutes",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "BRE001",
+    "name": "Box Room Elevator",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "DCK001",
+    "name": "Dock Pits",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "FLT001",
+    "name": "Forklifts",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "KNR001",
+    "name": "Knife Room",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "LGT001",
+    "name": "Light Covers",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "OSG001",
+    "name": "Outside Grounds",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SLC001",
+    "name": "SLC Scales",
+    "department": "Production",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SOP001",
+    "name": "Soap Room",
+    "department": "Sanitation",
+    "frequency": "Weekly",
+    "frequencyDays": 7,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "ICE001",
+    "name": "Ice House & Augers",
+    "department": "Sanitation",
+    "frequency": "Bi-Weekly",
+    "frequencyDays": 14,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "BRM001",
+    "name": "Box Room",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "BRW001",
+    "name": "Box Room Warehouse",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "CIP001",
+    "name": "CIP Systems",
+    "department": "Sanitation",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "CVP001",
+    "name": "CVP Machines",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "EXH001",
+    "name": "Exhaust Fans and Heaters",
     "department": "Maintenance",
-    "frequency": "Monthly"
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SHP001",
+    "name": "Shipping Docks",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SCG001",
+    "name": "Supply Cage",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SUP001",
+    "name": "Supply Room",
+    "department": "Production",
+    "frequency": "Monthly",
+    "frequencyDays": 30,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "OFF001",
+    "name": "Offal Building",
+    "department": "Production",
+    "frequency": "Every 2 Months",
+    "frequencyDays": 60,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "BLD001",
+    "name": "Building Repair",
+    "department": "Maintenance",
+    "frequency": "Quarterly",
+    "frequencyDays": 90,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "COL001",
+    "name": "Cooler Overheads",
+    "department": "Maintenance",
+    "frequency": "Quarterly",
+    "frequencyDays": 90,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "CLW001",
+    "name": "Cooler Walls",
+    "department": "Maintenance",
+    "frequency": "Quarterly",
+    "frequencyDays": 90,
+    "qaRequired": "Yes",
+    "formType": "Extended Sanitation Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "MEP001",
+    "name": "Maintenance Electrical & Pump Rooms",
+    "department": "Maintenance",
+    "frequency": "Quarterly",
+    "frequencyDays": 90,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "MSH001",
+    "name": "Maintenance Shops",
+    "department": "Maintenance",
+    "frequency": "Quarterly",
+    "frequencyDays": 90,
+    "qaRequired": "Yes",
+    "formType": "Master Cleaning Schedule",
+    "requiresSignature": "Yes"
+  },
+  {
+    "id": "SEC001",
+    "name": "Sectioned Areas Work Completion",
+    "department": "QA",
+    "frequency": "Special Event",
+    "frequencyDays": 0,
+    "qaRequired": "Yes",
+    "formType": "Sectioned Area Verification",
+    "requiresSignature": "Yes"
   }
 ]

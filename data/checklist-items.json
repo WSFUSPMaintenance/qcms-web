@@ -2,11 +2,631 @@
   {
     "formId": "AIR001",
     "itemId": "AIR001-01",
+    "sequence": 1,
     "requirement": "Area thoroughly cleaned and free of dirt/debris"
   },
   {
     "formId": "AIR001",
     "itemId": "AIR001-02",
+    "sequence": 2,
     "requirement": "Air curtains in good repair"
+  },
+  {
+    "formId": "BCH001",
+    "itemId": "BCH001-01",
+    "sequence": 1,
+    "requirement": "Box chutes and slides are free of debris associated with extended use"
+  },
+  {
+    "formId": "BLD001",
+    "itemId": "BLD001-01",
+    "sequence": 1,
+    "requirement": "Overall building structure free of debris, clutter, build-up, and general repairs made"
+  },
+  {
+    "formId": "BLD001",
+    "itemId": "BLD001-02",
+    "sequence": 2,
+    "requirement": "Rooftop clean and free of debris, all filters clean, and all units working properly"
+  },
+  {
+    "formId": "BLD001",
+    "itemId": "BLD001-03",
+    "sequence": 3,
+    "requirement": "Proper pest prevention practices in place"
+  },
+  {
+    "formId": "BLD001",
+    "itemId": "BLD001-04",
+    "sequence": 4,
+    "requirement": "All ducts/exhaust chutes clean and closed off if not in use"
+  },
+  {
+    "formId": "BRE001",
+    "itemId": "BRE001-01",
+    "sequence": 1,
+    "requirement": "Box chutes and slides are free of debris associated with extended use"
+  },
+  {
+    "formId": "BRM001",
+    "itemId": "BRM001-01",
+    "sequence": 1,
+    "requirement": "Overhead and walls clean and free of cobwebs, dirt, or debris"
+  },
+  {
+    "formId": "BRM001",
+    "itemId": "BRM001-02",
+    "sequence": 2,
+    "requirement": "Floors cleaned and free of debris"
+  },
+  {
+    "formId": "BRM001",
+    "itemId": "BRM001-03",
+    "sequence": 3,
+    "requirement": "Storage area cleaned"
+  },
+  {
+    "formId": "BRM001",
+    "itemId": "BRM001-04",
+    "sequence": 4,
+    "requirement": "All lights operable with shatter proof bulbs"
+  },
+  {
+    "formId": "BRM001",
+    "itemId": "BRM001-05",
+    "sequence": 5,
+    "requirement": "No boxes stored directly on floors or pushed against the walls"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-01",
+    "sequence": 1,
+    "requirement": "Overhead and walls clean and free of pest activity, dirt, and debris"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-02",
+    "sequence": 2,
+    "requirement": "Floors cleaned and free of debris"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-03",
+    "sequence": 3,
+    "requirement": "Pallets off the wall and lined up to create a viewable aisle between and behind pallets"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-04",
+    "sequence": 4,
+    "requirement": "All lights operable with shatter proof bulbs"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-05",
+    "sequence": 5,
+    "requirement": "No packaging material or supplies stored directly on the floor"
+  },
+  {
+    "formId": "BRW001",
+    "itemId": "BRW001-06",
+    "sequence": 6,
+    "requirement": "Fans operable and clean"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-01",
+    "sequence": 1,
+    "requirement": "Areas cleaned free of build-up"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-02",
+    "sequence": 2,
+    "requirement": "Pipes broken loose and inspected"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-03",
+    "sequence": 3,
+    "requirement": "Dry checks acceptable and free of product residue"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-04",
+    "sequence": 4,
+    "requirement": "Areas randomly selected documented"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-05",
+    "sequence": 5,
+    "requirement": "QA Accept/Reject recorded"
+  },
+  {
+    "formId": "CIP001",
+    "itemId": "CIP001-06",
+    "sequence": 6,
+    "requirement": "Area codes documented when applicable"
+  },
+  {
+    "formId": "CLW001",
+    "itemId": "CLW001-01",
+    "sequence": 1,
+    "requirement": "Walls cleaned and free of dirt, mold/mildew"
+  },
+  {
+    "formId": "CLW001",
+    "itemId": "CLW001-02",
+    "sequence": 2,
+    "requirement": "Walls in good repair"
+  },
+  {
+    "formId": "CLW001",
+    "itemId": "CLW001-03",
+    "sequence": 3,
+    "requirement": "Floors in good repair"
+  },
+  {
+    "formId": "COL001",
+    "itemId": "COL001-01",
+    "sequence": 1,
+    "requirement": "Overheads free of dust/dirt/mildew of all types"
+  },
+  {
+    "formId": "COL001",
+    "itemId": "COL001-02",
+    "sequence": 2,
+    "requirement": "Overhead structure in good repair"
+  },
+  {
+    "formId": "COL001",
+    "itemId": "COL001-03",
+    "sequence": 3,
+    "requirement": "All lights operable with shatter proof bulbs and covers"
+  },
+  {
+    "formId": "CVP001",
+    "itemId": "CVP001-01",
+    "sequence": 1,
+    "requirement": "CVP machines thoroughly cleaned so that they are free of all visible debris"
+  },
+  {
+    "formId": "DCK001",
+    "itemId": "DCK001-01",
+    "sequence": 1,
+    "requirement": "Area thoroughly cleaned and free of dirt/debris"
+  },
+  {
+    "formId": "DCK001",
+    "itemId": "DCK001-02",
+    "sequence": 2,
+    "requirement": "Dock pits in good repair"
+  },
+  {
+    "formId": "EXH001",
+    "itemId": "EXH001-01",
+    "sequence": 1,
+    "requirement": "Fans cleaned and free of dirt and debris"
+  },
+  {
+    "formId": "EXH001",
+    "itemId": "EXH001-02",
+    "sequence": 2,
+    "requirement": "Repairs made if needed"
+  },
+  {
+    "formId": "FLT001",
+    "itemId": "FLT001-01",
+    "sequence": 1,
+    "requirement": "Forklifts thoroughly cleaned and free of all dirt/debris and oil"
+  },
+  {
+    "formId": "FLT001",
+    "itemId": "FLT001-02",
+    "sequence": 2,
+    "requirement": "Forklifts operable"
+  },
+  {
+    "formId": "ICE001",
+    "itemId": "ICE001-01",
+    "sequence": 1,
+    "requirement": "All ice removed"
+  },
+  {
+    "formId": "ICE001",
+    "itemId": "ICE001-02",
+    "sequence": 2,
+    "requirement": "Walls and floors cleaned"
+  },
+  {
+    "formId": "ICE001",
+    "itemId": "ICE001-03",
+    "sequence": 3,
+    "requirement": "Walls and floors in good repair"
+  },
+  {
+    "formId": "ICE001",
+    "itemId": "ICE001-04",
+    "sequence": 4,
+    "requirement": "Auger and chute cleaned"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-01",
+    "sequence": 1,
+    "requirement": "Area clean and free of debris"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-02",
+    "sequence": 2,
+    "requirement": "All equipment stored in designated area"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-03",
+    "sequence": 3,
+    "requirement": "Area free of cobwebs, build-up, mold, mildew"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-04",
+    "sequence": 4,
+    "requirement": "All lights operable and clean"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-05",
+    "sequence": 5,
+    "requirement": "All equipment properly stored"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-06",
+    "sequence": 6,
+    "requirement": "All containers properly labeled"
+  },
+  {
+    "formId": "KNR001",
+    "itemId": "KNR001-07",
+    "sequence": 7,
+    "requirement": "Floor clean"
+  },
+  {
+    "formId": "LGT001",
+    "itemId": "LGT001-01",
+    "sequence": 1,
+    "requirement": "Tube lights are free of standing water and debris"
+  },
+  {
+    "formId": "LGT001",
+    "itemId": "LGT001-02",
+    "sequence": 2,
+    "requirement": "Tube lights are clean and free of build-up"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-01",
+    "sequence": 1,
+    "requirement": "Area clean and free of debris"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-02",
+    "sequence": 2,
+    "requirement": "All equipment stored off ground"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-03",
+    "sequence": 3,
+    "requirement": "Area free of cobwebs, build-up, mold, mildew"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-04",
+    "sequence": 4,
+    "requirement": "All lights operable and clean"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-05",
+    "sequence": 5,
+    "requirement": "All equipment properly stored"
+  },
+  {
+    "formId": "MEP001",
+    "itemId": "MEP001-06",
+    "sequence": 6,
+    "requirement": "All containers properly labeled"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-01",
+    "sequence": 1,
+    "requirement": "Area clean and free of debris"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-02",
+    "sequence": 2,
+    "requirement": "All equipment stored off ground"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-03",
+    "sequence": 3,
+    "requirement": "Area free of cobwebs, build-up, mold, mildew"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-04",
+    "sequence": 4,
+    "requirement": "All lights operable and clean"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-05",
+    "sequence": 5,
+    "requirement": "All equipment properly stored"
+  },
+  {
+    "formId": "MSH001",
+    "itemId": "MSH001-06",
+    "sequence": 6,
+    "requirement": "All containers properly labeled"
+  },
+  {
+    "formId": "OFF001",
+    "itemId": "OFF001-01",
+    "sequence": 1,
+    "requirement": "Building, walls, and equipment free of large amounts of build-up"
+  },
+  {
+    "formId": "OFF001",
+    "itemId": "OFF001-02",
+    "sequence": 2,
+    "requirement": "Equipment and stands free of large amounts of build-up"
+  },
+  {
+    "formId": "OHD001",
+    "itemId": "OHD001-01",
+    "sequence": 1,
+    "requirement": "Overhead structures and equipment cleaned"
+  },
+  {
+    "formId": "OHD001",
+    "itemId": "OHD001-02",
+    "sequence": 2,
+    "requirement": "Pipes cleaned"
+  },
+  {
+    "formId": "OHD001",
+    "itemId": "OHD001-03",
+    "sequence": 3,
+    "requirement": "Light structures cleaned"
+  },
+  {
+    "formId": "OHD001",
+    "itemId": "OHD001-04",
+    "sequence": 4,
+    "requirement": "Fans cleaned"
+  },
+  {
+    "formId": "OHD001",
+    "itemId": "OHD001-05",
+    "sequence": 5,
+    "requirement": "Vents/Exhaust cleaned"
+  },
+  {
+    "formId": "OHD002",
+    "itemId": "OHD002-01",
+    "sequence": 1,
+    "requirement": "Overhead structures and equipment cleaned"
+  },
+  {
+    "formId": "OHD002",
+    "itemId": "OHD002-02",
+    "sequence": 2,
+    "requirement": "Pipes cleaned"
+  },
+  {
+    "formId": "OHD002",
+    "itemId": "OHD002-03",
+    "sequence": 3,
+    "requirement": "Light structures cleaned"
+  },
+  {
+    "formId": "OHD002",
+    "itemId": "OHD002-04",
+    "sequence": 4,
+    "requirement": "Fans cleaned"
+  },
+  {
+    "formId": "OHD002",
+    "itemId": "OHD002-05",
+    "sequence": 5,
+    "requirement": "Vents/Exhaust cleaned"
+  },
+  {
+    "formId": "OSG001",
+    "itemId": "OSG001-01",
+    "sequence": 1,
+    "requirement": "Trash/debris removed from grounds"
+  },
+  {
+    "formId": "OSG001",
+    "itemId": "OSG001-02",
+    "sequence": 2,
+    "requirement": "Grass cut"
+  },
+  {
+    "formId": "OSG001",
+    "itemId": "OSG001-03",
+    "sequence": 3,
+    "requirement": "Building clear of weeds"
+  },
+  {
+    "formId": "OSG001",
+    "itemId": "OSG001-04",
+    "sequence": 4,
+    "requirement": "No visible signs of wasp/bee hives, ant hills, or any other signs of pest/rodent harborages"
+  },
+  {
+    "formId": "SCG001",
+    "itemId": "SCG001-01",
+    "sequence": 1,
+    "requirement": "Overhead and walls clean and free of cobwebs, dirt, or debris"
+  },
+  {
+    "formId": "SCG001",
+    "itemId": "SCG001-02",
+    "sequence": 2,
+    "requirement": "Floors cleaned and free of debris"
+  },
+  {
+    "formId": "SCG001",
+    "itemId": "SCG001-03",
+    "sequence": 3,
+    "requirement": "Storage area cleaned"
+  },
+  {
+    "formId": "SCG001",
+    "itemId": "SCG001-04",
+    "sequence": 4,
+    "requirement": "All lights operable with shatter proof bulbs"
+  },
+  {
+    "formId": "SCG001",
+    "itemId": "SCG001-05",
+    "sequence": 5,
+    "requirement": "No packaging material stored directly on floors"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-01",
+    "sequence": 1,
+    "requirement": "Date work completed recorded"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-02",
+    "sequence": 2,
+    "requirement": "Extended sanitation area selected"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-03",
+    "sequence": 3,
+    "requirement": "Work type identified as cleaned, replaced, or inspected"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-04",
+    "sequence": 4,
+    "requirement": "Description of work completed documented"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-05",
+    "sequence": 5,
+    "requirement": "Job done by signature captured"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-06",
+    "sequence": 6,
+    "requirement": "Inspection signature captured"
+  },
+  {
+    "formId": "SEC001",
+    "itemId": "SEC001-07",
+    "sequence": 7,
+    "requirement": "QA approval signature captured"
+  },
+  {
+    "formId": "SHP001",
+    "itemId": "SHP001-01",
+    "sequence": 1,
+    "requirement": "Overhead and walls clean and free of cobwebs, dirt, or debris"
+  },
+  {
+    "formId": "SHP001",
+    "itemId": "SHP001-02",
+    "sequence": 2,
+    "requirement": "Floors and drains cleaned and free of debris"
+  },
+  {
+    "formId": "SHP001",
+    "itemId": "SHP001-03",
+    "sequence": 3,
+    "requirement": "Storage area cleaned"
+  },
+  {
+    "formId": "SHP001",
+    "itemId": "SHP001-04",
+    "sequence": 4,
+    "requirement": "All lights operable with shatter proof bulbs"
+  },
+  {
+    "formId": "SHP001",
+    "itemId": "SHP001-05",
+    "sequence": 5,
+    "requirement": "No packaging material stored directly on floors"
+  },
+  {
+    "formId": "SLC001",
+    "itemId": "SLC001-01",
+    "sequence": 1,
+    "requirement": "Scales thoroughly cleaned inside/outside so that they are free of all visible debris"
+  },
+  {
+    "formId": "SOP001",
+    "itemId": "SOP001-01",
+    "sequence": 1,
+    "requirement": "Area cleaned of trash/debris"
+  },
+  {
+    "formId": "SOP001",
+    "itemId": "SOP001-02",
+    "sequence": 2,
+    "requirement": "All chemical containers properly labeled and stored"
+  },
+  {
+    "formId": "SOP001",
+    "itemId": "SOP001-03",
+    "sequence": 3,
+    "requirement": "Area free of build-up, mildew, or mold"
+  },
+  {
+    "formId": "SOP001",
+    "itemId": "SOP001-04",
+    "sequence": 4,
+    "requirement": "Area locked"
+  },
+  {
+    "formId": "SUP001",
+    "itemId": "SUP001-01",
+    "sequence": 1,
+    "requirement": "Overhead and walls clean and free of cobwebs, dirt, or debris"
+  },
+  {
+    "formId": "SUP001",
+    "itemId": "SUP001-02",
+    "sequence": 2,
+    "requirement": "Floors cleaned and free of debris"
+  },
+  {
+    "formId": "SUP001",
+    "itemId": "SUP001-03",
+    "sequence": 3,
+    "requirement": "Storage area cleaned"
+  },
+  {
+    "formId": "SUP001",
+    "itemId": "SUP001-04",
+    "sequence": 4,
+    "requirement": "All lights operable with shatter proof bulbs"
   }
 ]
