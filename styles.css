@@ -181,3 +181,29 @@ input[type="radio"] {
     font-weight: bold;
     color: #22c55e;
 }
+
+.inspection-header-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.inspection-header-row h2 {
+    margin: 0;
+}
+
+.back-button {
+    background: #334155;
+    color: #f8fafc;
+    border: 1px solid #64748b;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background: #475569;
+}
