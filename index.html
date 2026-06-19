@@ -25,44 +25,28 @@
         </div>
 
         <div class="menu-grid">
-
-            <button class="menu-button" onclick="showInspection()">
-                Start Inspection
-            </button>
-
-            <button class="menu-button" disabled>
-                Open Inspections
-            </button>
-
-            <button class="menu-button" disabled>
-                Completed Inspections
-            </button>
-
-            <button class="menu-button" disabled>
-                QA Review
-            </button>
-
+            <button class="menu-button" onclick="showInspection()">Start Inspection</button>
+            <button class="menu-button" disabled>Open Inspections</button>
+            <button class="menu-button" disabled>Completed Inspections</button>
+            <button class="menu-button" disabled>QA Review</button>
         </div>
     </div>
 
     <div id="inspectionPanel" class="hidden">
 
-        <button class="back-button" onclick="backToHome()">
-            ← Back to Home
-        </button>
-
         <div class="inspection-card">
 
-            <h2>Inspection Entry</h2>
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <h2>Inspection Entry</h2>
+            </div>
 
             <label><strong>Select Inspection</strong></label>
-
             <select id="inspectionSelect">
                 <option value="">Select Inspection</option>
             </select>
 
             <div id="inspectionInfo" class="inspection-info hidden"></div>
-
             <div id="checklistContainer" class="hidden"></div>
 
         </div>
