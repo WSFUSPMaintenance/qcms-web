@@ -26,14 +26,13 @@
 
         <div class="menu-grid">
             <button class="menu-button" onclick="showInspection()">Start Inspection</button>
-            <button class="menu-button" disabled>Open Inspections</button>
-            <button class="menu-button" disabled>Completed Inspections</button>
+            <button class="menu-button" onclick="showOpenInspections()">Open Inspections</button>
+            <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
             <button class="menu-button" disabled>QA Review</button>
         </div>
     </div>
 
     <div id="inspectionPanel" class="hidden">
-
         <div class="inspection-card">
 
             <div class="inspection-header-row">
@@ -50,7 +49,45 @@
             <div id="checklistContainer" class="hidden"></div>
 
         </div>
+    </div>
 
+    <div id="openInspectionsPanel" class="hidden">
+        <div class="inspection-card">
+
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <h2>Open Inspections</h2>
+            </div>
+
+            <div id="openInspectionList"></div>
+
+        </div>
+    </div>
+
+    <div id="completedInspectionsPanel" class="hidden">
+        <div class="inspection-card">
+
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <h2>Completed Inspections</h2>
+            </div>
+
+            <div id="completedInspectionList"></div>
+
+        </div>
+    </div>
+
+    <div id="inspectionDetailsPanel" class="hidden">
+        <div class="inspection-card">
+
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="showOpenInspections()">← Back to Open Inspections</button>
+                <h2>Inspection Details</h2>
+            </div>
+
+            <div id="inspectionDetailsContent"></div>
+
+        </div>
     </div>
 
 </main>
