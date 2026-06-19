@@ -264,7 +264,7 @@ function viewInspectionDetails(inspectionId, returnType) {
         responses.forEach(response => {
             const checklistItem = getRecordValue(response, ["ChecklistItemText", "Checklist Item", "Title"]);
             const requirement = getRecordValue(response, ["Requirement Text", "Requirement"]);
-            const answer = getRecordValue(response, ["Response", "Response Value"]);
+            const answer = getRecordValue(response, ["Response", "Response Value"]) || "N/A";
             const comment = getRecordValue(response, ["Comment", "Comments"]);
 
             html += `
