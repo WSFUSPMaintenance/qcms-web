@@ -1,5 +1,7 @@
 let inspections = [];
 let checklistItems = [];
+let inspectionRecords = [];
+let inspectionResponses = [];
 
 async function loadData() {
     const formsResponse = await fetch("./data/forms.json");
@@ -7,6 +9,12 @@ async function loadData() {
 
     const checklistResponse = await fetch("./data/checklist-items.json");
     checklistItems = await checklistResponse.json();
+
+    const recordsResponse = await fetch("./data/inspection-records.json");
+    inspectionRecords = await recordsResponse.json();
+
+    const responsesResponse = await fetch("./data/inspection-responses.json");
+    inspectionResponses = await responsesResponse.json();
 
     populateInspectionDropdown();
 }
@@ -24,13 +32,33 @@ function populateInspectionDropdown() {
     });
 }
 
-function showInspection() {
+function hideAllPanels() {
     document.getElementById("homePanel").classList.add("hidden");
+    document.getElementById("inspectionPanel").classList.add("hidden");
+    document.getElementById("openInspectionsPanel").classList.add("hidden");
+    document.getElementById("completedInspectionsPanel").classList.add("hidden");
+    document.getElementById("inspectionDetailsPanel").classList.add("hidden");
+}
+
+function showInspection() {
+    hideAllPanels();
     document.getElementById("inspectionPanel").classList.remove("hidden");
 }
 
+function showOpenInspections() {
+    hideAllPanels();
+    document.getElementById("openInspectionsPanel").classList.remove("hidden");
+    loadInspectionList("open");
+}
+
+function showCompletedInspections() {
+    hideAllPanels();
+    document.getElementById("completedInspectionsPanel").classList.remove("hidden");
+    loadInspectionList("completed");
+}
+
 function backToHome() {
-    document.getElementById("inspectionPanel").classList.add("hidden");
+    hideAllPanels();
     document.getElementById("homePanel").classList.remove("hidden");
 
     document.getElementById("inspectionSelect").value = "";
@@ -118,6 +146,183 @@ function loadInspection() {
     document
         .getElementById("submitInspection")
         .addEventListener("click", submitInspection);
+}
+
+function loadInspectionList(type) {
+    const isCompleted = type === "completed";
+
+    const container = document.getElementById(
+        isCompleted ? "completedInspectionList" : "openInspectionList"
+    );
+
+    const filteredRecords = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return isCompleted
+            ? status === "Approved"
+            : status !== "Approved";
+    });
+
+    if (filteredRecords.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                No ${isCompleted ? "completed" : "open"} inspections found.
+            </div>
+        `;
+        return;
+    }
+
+    let html = "";
+
+    filteredRecords.forEach(record => {
+        const inspectionId = getRecordValue(record, ["Inspection ID", "InspectionID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
+        const formId = getRecordValue(record, ["Form ID", "FormID"]);
+        const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
+        const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        const completion = getRecordValue(record, ["Completion %", "Completion"]);
+        const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
+
+        html += `
+            <div class="inspection-list-card">
+                <h3>${name}</h3>
+
+                <div class="meta-row"><strong>Inspection ID:</strong> ${inspectionId}</div>
+                <div class="meta-row"><strong>Form ID:</strong> ${formId}</div>
+                <div class="meta-row"><strong>Department:</strong> ${department}</div>
+                <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
+                <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
+                <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+
+                <span class="status-pill ${statusClass(status)}">${status}</span>
+
+                <br>
+
+                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', '${type}')">
+                    View Details
+                </button>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function viewInspectionDetails(inspectionId, returnType) {
+    hideAllPanels();
+    document.getElementById("inspectionDetailsPanel").classList.remove("hidden");
+
+    const record = inspectionRecords.find(item => {
+        const id = getRecordValue(item, ["Inspection ID", "InspectionID", "InspectionIDText"]);
+        return id === inspectionId;
+    });
+
+    const responses = inspectionResponses.filter(item => {
+        const id = getRecordValue(item, ["InspectionIDText", "Inspection ID", "Inspection"]);
+        return id === inspectionId;
+    });
+
+    const container = document.getElementById("inspectionDetailsContent");
+
+    if (!record) {
+        container.innerHTML = `
+            <div class="empty-state">
+                Inspection record not found.
+            </div>
+        `;
+        return;
+    }
+
+    const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
+    const formId = getRecordValue(record, ["Form ID", "FormID"]);
+    const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
+    const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+    const status = getRecordValue(record, ["Status", "Status Value"]);
+    const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
+    const completion = getRecordValue(record, ["Completion %", "Completion"]);
+
+    let html = `
+        <div class="inspection-info">
+            <h3>${name}</h3>
+            <p><strong>Inspection ID:</strong> ${inspectionId}</p>
+            <p><strong>Form ID:</strong> ${formId}</p>
+            <p><strong>Department:</strong> ${department}</p>
+            <p><strong>Submitted By:</strong> ${submittedBy}</p>
+            <p><strong>Submitted Date:</strong> ${submittedDate}</p>
+            <p><strong>Completion:</strong> ${completion}%</p>
+            <p><strong>Status:</strong> ${status}</p>
+        </div>
+    `;
+
+    if (responses.length === 0) {
+        html += `
+            <div class="empty-state">
+                No checklist responses found for this inspection.
+            </div>
+        `;
+    } else {
+        responses.forEach(response => {
+            const checklistItem = getRecordValue(response, ["ChecklistItemText", "Checklist Item", "Title"]);
+            const requirement = getRecordValue(response, ["Requirement Text", "Requirement"]);
+            const answer = getRecordValue(response, ["Response", "Response Value"]);
+            const comment = getRecordValue(response, ["Comment", "Comments"]);
+
+            html += `
+                <div class="response-card ${responseClass(answer)}">
+                    <h3>${checklistItem}</h3>
+                    <div class="meta-row"><strong>Requirement:</strong> ${requirement}</div>
+                    <div class="meta-row"><strong>Response:</strong> ${answer}</div>
+                    <div class="meta-row"><strong>Comment:</strong> ${comment || "None"}</div>
+                </div>
+            `;
+        });
+    }
+
+    html += `
+        <button class="detail-button" onclick="${
+            returnType === "completed"
+                ? "showCompletedInspections()"
+                : "showOpenInspections()"
+        }">
+            Back
+        </button>
+    `;
+
+    container.innerHTML = html;
+}
+
+function getRecordValue(record, possibleNames) {
+    for (const name of possibleNames) {
+        if (record[name] !== undefined && record[name] !== null && record[name] !== "") {
+            return record[name];
+        }
+    }
+
+    return "";
+}
+
+function statusClass(status) {
+    if (status === "Approved") {
+        return "status-approved";
+    }
+
+    if (status === "Rejected") {
+        return "status-rejected";
+    }
+
+    return "status-open";
+}
+
+function responseClass(response) {
+    if (response === "Pass") {
+        return "response-pass";
+    }
+
+    if (response === "Fail") {
+        return "response-fail";
+    }
+
+    return "response-na";
 }
 
 function cleanText(value) {
