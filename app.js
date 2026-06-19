@@ -25,7 +25,24 @@ function populateInspectionDropdown() {
 }
 
 function showInspection() {
+    document.getElementById("homePanel").classList.add("hidden");
     document.getElementById("inspectionPanel").classList.remove("hidden");
+}
+
+function backToHome() {
+    document.getElementById("inspectionPanel").classList.add("hidden");
+    document.getElementById("homePanel").classList.remove("hidden");
+
+    document.getElementById("inspectionSelect").value = "";
+
+    const info = document.getElementById("inspectionInfo");
+    const container = document.getElementById("checklistContainer");
+
+    info.classList.add("hidden");
+    info.innerHTML = "";
+
+    container.classList.add("hidden");
+    container.innerHTML = "";
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
