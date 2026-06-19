@@ -1,27 +1,36 @@
-const inspections = [
-    {
-        id: "AIR001",
-        name: "Air Curtains",
-        department: "Maintenance",
-        frequency: "Monthly",
-        items: [
-            {
-                itemId: "AIR001-01",
-                requirement: "Area thoroughly cleaned and free of dirt/debris"
-            },
-            {
-                itemId: "AIR001-02",
-                requirement: "Air curtains in good repair"
-            }
-        ]
-    }
-];
+let inspections = [];
+let checklistItems = [];
+
+async function loadData() {
+    const formsResponse = await fetch("./data/forms.json");
+    inspections = await formsResponse.json();
+
+    const checklistResponse = await fetch("./data/checklist-items.json");
+    checklistItems = await checklistResponse.json();
+
+    populateInspectionDropdown();
+}
+
+function populateInspectionDropdown() {
+    const select = document.getElementById("inspectionSelect");
+
+    select.innerHTML = '<option value="">Select Inspection</option>';
+
+    inspections.forEach(inspection => {
+        const option = document.createElement("option");
+        option.value = inspection.id;
+        option.textContent = `${inspection.id} - ${inspection.name}`;
+        select.appendChild(option);
+    });
+}
 
 function showInspection() {
     document.getElementById("inspectionPanel").classList.remove("hidden");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadData();
+
     const inspectionSelect = document.getElementById("inspectionSelect");
     inspectionSelect.addEventListener("change", loadInspection);
 });
@@ -39,6 +48,8 @@ function loadInspection() {
         return;
     }
 
+    const items = checklistItems.filter(item => item.formId === selectedId);
+
     info.innerHTML = `
         <h3>${inspection.id} - ${inspection.name}</h3>
         <p>Department: <strong>${inspection.department}</strong></p>
@@ -49,7 +60,7 @@ function loadInspection() {
 
     let html = "";
 
-    inspection.items.forEach((item, index) => {
+    items.forEach((item, index) => {
         const itemNumber = index + 1;
 
         html += `
@@ -104,13 +115,14 @@ function cleanText(value) {
 function submitInspection() {
     const inspectionId = document.getElementById("inspectionSelect").value;
     const inspection = inspections.find(i => i.id === inspectionId);
+    const items = checklistItems.filter(item => item.formId === inspectionId);
     const status = document.getElementById("statusMessage");
 
     const responseLines = [];
 
-    for (let index = 0; index < inspection.items.length; index++) {
+    for (let index = 0; index < items.length; index++) {
         const itemNumber = index + 1;
-        const item = inspection.items[index];
+        const item = items[index];
 
         const response = document.querySelector(
             `input[name="item${itemNumber}"]:checked`
