@@ -27,8 +27,8 @@
         <div class="menu-grid">
             <button class="menu-button" onclick="showInspection()">Start Inspection</button>
             <button class="menu-button" onclick="showOpenInspections()">Open Inspections</button>
-            <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
             <button class="menu-button" onclick="showQAReview()">QA Review</button>
+            <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
         </div>
     </div>
 
@@ -64,6 +64,19 @@
         </div>
     </div>
 
+    <div id="qaReviewPanel" class="hidden">
+        <div class="inspection-card">
+
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <h2>QA Review</h2>
+            </div>
+
+            <div id="qaReviewList"></div>
+
+        </div>
+    </div>
+
     <div id="completedInspectionsPanel" class="hidden">
         <div class="inspection-card">
 
@@ -81,7 +94,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="showOpenInspections()">← Back to Open Inspections</button>
+                <button id="detailsBackButton" class="back-button">← Back</button>
                 <h2>Inspection Details</h2>
             </div>
 
@@ -90,19 +103,6 @@
         </div>
     </div>
 
-    <div id="qaReviewPanel" class="hidden">
-    <div class="inspection-card">
-
-        <div class="inspection-header-row">
-            <button class="back-button" onclick="backToHome()">← Back to Home</button>
-            <h2>QA Review</h2>
-        </div>
-
-        <div id="qaReviewList"></div>
-
-    </div>
-</div>
-    
 </main>
 
 <script src="app.js"></script>
