@@ -36,6 +36,7 @@ function hideAllPanels() {
     document.getElementById("homePanel").classList.add("hidden");
     document.getElementById("inspectionPanel").classList.add("hidden");
     document.getElementById("openInspectionsPanel").classList.add("hidden");
+    document.getElementById("qaReviewPanel").classList.add("hidden");
     document.getElementById("completedInspectionsPanel").classList.add("hidden");
     document.getElementById("inspectionDetailsPanel").classList.add("hidden");
 }
@@ -49,6 +50,12 @@ function showOpenInspections() {
     hideAllPanels();
     document.getElementById("openInspectionsPanel").classList.remove("hidden");
     loadInspectionList("open");
+}
+
+function showQAReview() {
+    hideAllPanels();
+    document.getElementById("qaReviewPanel").classList.remove("hidden");
+    loadQAReviewList();
 }
 
 function showCompletedInspections() {
@@ -157,15 +164,83 @@ function loadInspectionList(type) {
 
     const filteredRecords = inspectionRecords.filter(record => {
         const status = getRecordValue(record, ["Status", "Status Value"]);
+
         return isCompleted
-            ? status === "Approved"
-            : status !== "Approved";
+            ? status === "Approved" || status === "Rejected"
+            : status !== "Approved" && status !== "Rejected";
     });
 
     if (filteredRecords.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 No ${isCompleted ? "completed" : "open"} inspections found.
+            </div>
+        `;
+        return;
+    }
+
+    let html = "";
+
+    filteredRecords.forEach(record => {
+        const inspectionId = getRecordValue(record, ["Inspection ID", "InspectionID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
+        const formId = getRecordValue(record, ["Form ID", "FormID"]);
+        const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
+        const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        const completion = getRecordValue(record, ["Completion %", "Completion"]);
+        const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
+        const qaReviewer = getRecordValue(record, ["QA Reviewer", "QAReviewer"]);
+        const qaReviewDate = getRecordValue(record, ["QA Review Date", "QAReviewDate"]);
+        const qaComments = getRecordValue(record, ["QA Comments", "QAComments"]);
+
+        html += `
+            <div class="inspection-list-card">
+                <h3>${name}</h3>
+
+                <div class="meta-row"><strong>Inspection ID:</strong> ${inspectionId}</div>
+                <div class="meta-row"><strong>Form ID:</strong> ${formId}</div>
+                <div class="meta-row"><strong>Department:</strong> ${department}</div>
+                <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
+                <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
+                <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+        `;
+
+        if (isCompleted) {
+            html += `
+                <div class="meta-row"><strong>QA Reviewer:</strong> ${qaReviewer || "Not Recorded"}</div>
+                <div class="meta-row"><strong>QA Review Date:</strong> ${qaReviewDate || "Not Recorded"}</div>
+                <div class="meta-row"><strong>QA Comments:</strong> ${qaComments || "None"}</div>
+            `;
+        }
+
+        html += `
+                <span class="status-pill ${statusClass(status)}">${status}</span>
+
+                <br>
+
+                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', '${type}')">
+                    View Details
+                </button>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function loadQAReviewList() {
+    const container = document.getElementById("qaReviewList");
+
+    const filteredRecords = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return status === "Awaiting QA";
+    });
+
+    if (filteredRecords.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                No inspections awaiting QA review.
             </div>
         `;
         return;
@@ -198,8 +273,8 @@ function loadInspectionList(type) {
 
                 <br>
 
-                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', '${type}')">
-                    View Details
+                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', 'qa')">
+                    Review Inspection
                 </button>
             </div>
         `;
@@ -211,6 +286,19 @@ function loadInspectionList(type) {
 function viewInspectionDetails(inspectionId, returnType) {
     hideAllPanels();
     document.getElementById("inspectionDetailsPanel").classList.remove("hidden");
+
+    const backButton = document.getElementById("detailsBackButton");
+
+    if (returnType === "completed") {
+        backButton.textContent = "← Back to Completed Inspections";
+        backButton.onclick = showCompletedInspections;
+    } else if (returnType === "qa") {
+        backButton.textContent = "← Back to QA Review";
+        backButton.onclick = showQAReview;
+    } else {
+        backButton.textContent = "← Back to Open Inspections";
+        backButton.onclick = showOpenInspections;
+    }
 
     const record = inspectionRecords.find(item => {
         const id = getRecordValue(item, ["Inspection ID", "InspectionID", "InspectionIDText"]);
@@ -240,6 +328,9 @@ function viewInspectionDetails(inspectionId, returnType) {
     const status = getRecordValue(record, ["Status", "Status Value"]);
     const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
     const completion = getRecordValue(record, ["Completion %", "Completion"]);
+    const qaReviewer = getRecordValue(record, ["QA Reviewer", "QAReviewer"]);
+    const qaReviewDate = getRecordValue(record, ["QA Review Date", "QAReviewDate"]);
+    const qaComments = getRecordValue(record, ["QA Comments", "QAComments"]);
 
     let html = `
         <div class="inspection-info">
@@ -251,6 +342,17 @@ function viewInspectionDetails(inspectionId, returnType) {
             <p><strong>Submitted Date:</strong> ${submittedDate}</p>
             <p><strong>Completion:</strong> ${completion}%</p>
             <p><strong>Status:</strong> ${status}</p>
+    `;
+
+    if (status === "Approved" || status === "Rejected") {
+        html += `
+            <p><strong>QA Reviewer:</strong> ${qaReviewer || "Not Recorded"}</p>
+            <p><strong>QA Review Date:</strong> ${qaReviewDate || "Not Recorded"}</p>
+            <p><strong>QA Comments:</strong> ${qaComments || "None"}</p>
+        `;
+    }
+
+    html += `
         </div>
     `;
 
@@ -278,17 +380,79 @@ function viewInspectionDetails(inspectionId, returnType) {
         });
     }
 
-    html += `
-        <button class="detail-button" onclick="${
-            returnType === "completed"
-                ? "showCompletedInspections()"
-                : "showOpenInspections()"
-        }">
-            Back
-        </button>
-    `;
+    if (returnType === "qa") {
+        html += `
+            <div class="qa-action-card">
+                <h3>QA Review Decision</h3>
+
+                <label for="qaComments"><strong>QA Comments</strong></label>
+                <textarea
+                    id="qaComments"
+                    rows="4"
+                    placeholder="Enter QA comments"></textarea>
+
+                <button class="approve-button" onclick="approveInspection('${inspectionId}')">
+                    Approve Inspection
+                </button>
+
+                <button class="reject-button" onclick="rejectInspection('${inspectionId}')">
+                    Reject Inspection
+                </button>
+
+                <div id="qaActionMessage" class="qa-message"></div>
+            </div>
+        `;
+    }
 
     container.innerHTML = html;
+}
+
+function approveInspection(inspectionId) {
+    updateInspectionQAStatus(inspectionId, "Approved");
+}
+
+function rejectInspection(inspectionId) {
+    const comments = document.getElementById("qaComments").value.trim();
+    const message = document.getElementById("qaActionMessage");
+
+    if (!comments) {
+        message.textContent = "QA comments are required when rejecting an inspection.";
+        message.style.color = "#ef4444";
+        return;
+    }
+
+    updateInspectionQAStatus(inspectionId, "Rejected");
+}
+
+function updateInspectionQAStatus(inspectionId, newStatus) {
+    const comments = document.getElementById("qaComments").value.trim();
+    const message = document.getElementById("qaActionMessage");
+
+    const record = inspectionRecords.find(item => {
+        const id = getRecordValue(item, ["Inspection ID", "InspectionID", "InspectionIDText"]);
+        return id === inspectionId;
+    });
+
+    if (!record) {
+        message.textContent = "Unable to locate inspection record.";
+        message.style.color = "#ef4444";
+        return;
+    }
+
+    const reviewer = "Current User";
+    const reviewDate = new Date().toLocaleDateString();
+
+    setRecordValue(record, ["Status", "Status Value"], newStatus);
+    setRecordValue(record, ["QA Reviewer", "QAReviewer"], reviewer);
+    setRecordValue(record, ["QA Review Date", "QAReviewDate"], reviewDate);
+    setRecordValue(record, ["QA Comments", "QAComments"], comments);
+
+    message.textContent = `Inspection ${newStatus}. Moving to Completed Inspections.`;
+    message.style.color = newStatus === "Approved" ? "#22c55e" : "#ef4444";
+
+    setTimeout(() => {
+        showCompletedInspections();
+    }, 800);
 }
 
 function getRecordValue(record, possibleNames) {
@@ -299,6 +463,17 @@ function getRecordValue(record, possibleNames) {
     }
 
     return "";
+}
+
+function setRecordValue(record, possibleNames, value) {
+    for (const name of possibleNames) {
+        if (record[name] !== undefined) {
+            record[name] = value;
+            return;
+        }
+    }
+
+    record[possibleNames[0]] = value;
 }
 
 function statusClass(status) {
