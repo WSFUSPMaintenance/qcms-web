@@ -408,7 +408,7 @@ function viewInspectionDetails(inspectionId, returnType) {
 }
 
 function approveInspection(inspectionId) {
-    updateInspectionQAStatus(inspectionId, "Approved");
+    submitQAReview(inspectionId, "Approved");
 }
 
 function rejectInspection(inspectionId) {
@@ -421,38 +421,36 @@ function rejectInspection(inspectionId) {
         return;
     }
 
-    updateInspectionQAStatus(inspectionId, "Rejected");
+    submitQAReview(inspectionId, "Rejected");
 }
 
-function updateInspectionQAStatus(inspectionId, newStatus) {
-    const comments = document.getElementById("qaComments").value.trim();
+function submitQAReview(inspectionId, decision) {
+    const comments = document.getElementById("qaComments")?.value || "";
+    const reviewDate = new Date().toLocaleDateString("en-US");
+    const reviewer = "Dennis Barr";
+
+    const qaFormUrl =
+        "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3JG89IfD0E6e175TItrr8LO9tidJOFRAtBCVSjfTIJdUQUFQUDFJSVowOVpIREM1RlJEUTJQUzMxVi4u" +
+        "&r74f9b757fd384314b10657196e52b8d3=" +
+        encodeURIComponent(inspectionId) +
+        "&r51900abbe1134ba49bb1161d1ee25b72=" +
+        encodeURIComponent(decision) +
+        "&r71ed9222d2d4423db637e10e5c7d7571=" +
+        encodeURIComponent(reviewer) +
+        "&r170cdb462c9c4aa79acce5b7d531cd81=" +
+        encodeURIComponent(reviewDate) +
+        "&r48621006bdef491cb6110340f090d784=" +
+        encodeURIComponent(comments);
+
+    window.open(qaFormUrl, "_blank");
+
     const message = document.getElementById("qaActionMessage");
 
-    const record = inspectionRecords.find(item => {
-        const id = getRecordValue(item, ["Inspection ID", "InspectionID", "InspectionIDText"]);
-        return id === inspectionId;
-    });
-
-    if (!record) {
-        message.textContent = "Unable to locate inspection record.";
-        message.style.color = "#ef4444";
-        return;
+    if (message) {
+        message.innerHTML =
+            "QA Review Bridge opened. Submit the form to permanently update SharePoint.";
+        message.style.color = "#22c55e";
     }
-
-    const reviewer = "Current User";
-    const reviewDate = new Date().toLocaleDateString();
-
-    setRecordValue(record, ["Status", "Status Value"], newStatus);
-    setRecordValue(record, ["QA Reviewer", "QAReviewer"], reviewer);
-    setRecordValue(record, ["QA Review Date", "QAReviewDate"], reviewDate);
-    setRecordValue(record, ["QA Comments", "QAComments"], comments);
-
-    message.textContent = `Inspection ${newStatus}. Moving to Completed Inspections.`;
-    message.style.color = newStatus === "Approved" ? "#22c55e" : "#ef4444";
-
-    setTimeout(() => {
-        showCompletedInspections();
-    }, 800);
 }
 
 function getRecordValue(record, possibleNames) {
