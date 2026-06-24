@@ -16,11 +16,57 @@
 <main>
 
     <div id="homePanel">
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="openCount">0</div>
+                <div class="dashboard-label">Open Inspections</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="qaCount">0</div>
+                <div class="dashboard-label">Awaiting QA</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="approvedCount">0</div>
+                <div class="dashboard-label">Approved</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="rejectedCount">0</div>
+                <div class="dashboard-label">Rejected</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="pastDueCount">0</div>
+                <div class="dashboard-label">Past Due</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="failureCount">0</div>
+                <div class="dashboard-label">Total Failures</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="onTimePercent">100%</div>
+                <div class="dashboard-label">On-Time %</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-number" id="inspectionCount">0</div>
+                <div class="dashboard-label">Total Inspections</div>
+            </div>
+
+        </div>
+
         <div class="hero-card">
             <h2>Welcome to QCMS</h2>
             <p>
-                Electronic compliance inspections, sanitation records,
-                QA verification, and audit documentation.
+                Electronic compliance inspections,
+                sanitation records, QA verification,
+                and audit documentation.
             </p>
         </div>
 
@@ -30,6 +76,7 @@
             <button class="menu-button" onclick="showQAReview()">QA Review</button>
             <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
         </div>
+
     </div>
 
     <div id="inspectionPanel" class="hidden">
@@ -41,6 +88,7 @@
             </div>
 
             <label><strong>Select Inspection</strong></label>
+
             <select id="inspectionSelect">
                 <option value="">Select Inspection</option>
             </select>
