@@ -17,6 +17,7 @@ async function loadData() {
     inspectionResponses = await responsesResponse.json();
 
     populateInspectionDropdown();
+    updateDashboard();
 }
 
 function populateInspectionDropdown() {
@@ -30,6 +31,95 @@ function populateInspectionDropdown() {
         option.textContent = `${inspection.id} - ${inspection.name}`;
         select.appendChild(option);
     });
+}
+
+function updateDashboard() {
+    const totalInspections = inspectionRecords.length;
+
+    const openInspections = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return status !== "Approved" && status !== "Rejected";
+    }).length;
+
+    const awaitingQA = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return status === "Awaiting QA";
+    }).length;
+
+    const approved = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return status === "Approved";
+    }).length;
+
+    const rejected = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        return status === "Rejected";
+    }).length;
+
+    const pastDue = inspectionRecords.filter(record => {
+        const status = getRecordValue(record, ["Status", "Status Value"]);
+        const dueDateValue = getRecordValue(record, ["DueDate", "Due Date"]);
+
+        if (!dueDateValue) {
+            return false;
+        }
+
+        if (status === "Approved" || status === "Rejected") {
+            return false;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dueDate = new Date(dueDateValue);
+        dueDate.setHours(0, 0, 0, 0);
+
+        return dueDate < today;
+    }).length;
+
+    const totalFailures = inspectionResponses.filter(response => {
+        const answer = getRecordValue(response, ["Response", "Response Value"]);
+        return answer === "Fail";
+    }).length;
+
+    const recordsWithDueDates = inspectionRecords.filter(record => {
+        const dueDateValue = getRecordValue(record, ["DueDate", "Due Date"]);
+        const submittedDateValue = getRecordValue(record, ["SubmittedDate", "Submitted Date"]);
+        return dueDateValue && submittedDateValue;
+    });
+
+    let onTimePercent = "N/A";
+
+    if (recordsWithDueDates.length > 0) {
+        const onTimeCount = recordsWithDueDates.filter(record => {
+            const submittedDate = new Date(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+            const dueDate = new Date(getRecordValue(record, ["DueDate", "Due Date"]));
+
+            submittedDate.setHours(0, 0, 0, 0);
+            dueDate.setHours(0, 0, 0, 0);
+
+            return submittedDate <= dueDate;
+        }).length;
+
+        onTimePercent = Math.round((onTimeCount / recordsWithDueDates.length) * 100) + "%";
+    }
+
+    setDashboardValue("openCount", openInspections);
+    setDashboardValue("qaCount", awaitingQA);
+    setDashboardValue("approvedCount", approved);
+    setDashboardValue("rejectedCount", rejected);
+    setDashboardValue("pastDueCount", pastDue);
+    setDashboardValue("failureCount", totalFailures);
+    setDashboardValue("onTimePercent", onTimePercent);
+    setDashboardValue("inspectionCount", totalInspections);
+}
+
+function setDashboardValue(id, value) {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent = value;
+    }
 }
 
 function hideAllPanels() {
@@ -66,6 +156,7 @@ function showCompletedInspections() {
 
 function backToHome() {
     hideAllPanels();
+    updateDashboard();
     document.getElementById("homePanel").classList.remove("hidden");
 
     document.getElementById("inspectionSelect").value = "";
@@ -190,6 +281,7 @@ function loadInspectionList(type) {
         const status = getRecordValue(record, ["Status", "Status Value"]);
         const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
         const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+        const dueDate = formatDateOnly(getRecordValue(record, ["DueDate", "Due Date"]));
         const qaReviewer = getRecordValue(record, ["QAReviewer", "QA Reviewer"]);
         const qaReviewDate = formatDate(getRecordValue(record, ["QAReviewDate", "QA Review Date"]));
         const qaComments = getRecordValue(record, ["QAComments", "QA Comments", "Comments"]);
@@ -204,6 +296,7 @@ function loadInspectionList(type) {
                 <div class="meta-row"><strong>Department:</strong> ${department}</div>
                 <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
                 <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
+                <div class="meta-row"><strong>Due Date:</strong> ${dueDate || "Not Set"}</div>
                 <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
                 <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
                     <strong>Failures:</strong> ${failureCount}
@@ -261,6 +354,7 @@ function loadQAReviewList() {
         const status = getRecordValue(record, ["Status", "Status Value"]);
         const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
         const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+        const dueDate = formatDateOnly(getRecordValue(record, ["DueDate", "Due Date"]));
         const failureCount = getFailureCount(inspectionId);
 
         html += `
@@ -272,6 +366,7 @@ function loadQAReviewList() {
                 <div class="meta-row"><strong>Department:</strong> ${department}</div>
                 <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
                 <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
+                <div class="meta-row"><strong>Due Date:</strong> ${dueDate || "Not Set"}</div>
                 <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
                 <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
                     <strong>Failures:</strong> ${failureCount}
@@ -335,6 +430,7 @@ function viewInspectionDetails(inspectionId, returnType) {
     const submittedBy = getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"]);
     const status = getRecordValue(record, ["Status", "Status Value"]);
     const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+    const dueDate = formatDateOnly(getRecordValue(record, ["DueDate", "Due Date"]));
     const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
     const qaReviewer = getRecordValue(record, ["QAReviewer", "QA Reviewer"]);
     const qaReviewDate = formatDate(getRecordValue(record, ["QAReviewDate", "QA Review Date"]));
@@ -349,6 +445,7 @@ function viewInspectionDetails(inspectionId, returnType) {
             <p><strong>Department:</strong> ${department}</p>
             <p><strong>Submitted By:</strong> ${submittedBy}</p>
             <p><strong>Submitted Date:</strong> ${submittedDate}</p>
+            <p><strong>Due Date:</strong> ${dueDate || "Not Set"}</p>
             <p><strong>Completion:</strong> ${completion}%</p>
             <p class="${failureCount > 0 ? "failure-row" : ""}"><strong>Failures:</strong> ${failureCount}</p>
             <p><strong>Status:</strong> ${status}</p>
@@ -528,6 +625,20 @@ function formatDate(value) {
     }
 
     return date.toLocaleString("en-US");
+}
+
+function formatDateOnly(value) {
+    if (!value) {
+        return "";
+    }
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleDateString("en-US");
 }
 
 function cleanText(value) {
