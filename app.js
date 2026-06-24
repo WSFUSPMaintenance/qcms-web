@@ -182,17 +182,18 @@ function loadInspectionList(type) {
     let html = "";
 
     filteredRecords.forEach(record => {
-        const inspectionId = getRecordValue(record, ["Inspection ID", "InspectionID", "InspectionIDText"]);
-        const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
-        const formId = getRecordValue(record, ["Form ID", "FormID"]);
-        const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
-        const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+        const inspectionId = getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]);
+        const formId = getRecordValue(record, ["FormID", "Form ID"]);
+        const department = getRecordValue(record, ["Department", "Responsible Department Text"]);
+        const submittedBy = getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"]);
         const status = getRecordValue(record, ["Status", "Status Value"]);
-        const completion = getRecordValue(record, ["Completion %", "Completion"]);
-        const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
-        const qaReviewer = getRecordValue(record, ["QA Reviewer", "QAReviewer"]);
-        const qaReviewDate = getRecordValue(record, ["QA Review Date", "QAReviewDate"]);
-        const qaComments = getRecordValue(record, ["QA Comments", "QAComments"]);
+        const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
+        const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+        const qaReviewer = getRecordValue(record, ["QAReviewer", "QA Reviewer"]);
+        const qaReviewDate = formatDate(getRecordValue(record, ["QAReviewDate", "QA Review Date"]));
+        const qaComments = getRecordValue(record, ["QAComments", "QA Comments", "Comments"]);
+        const failureCount = getFailureCount(inspectionId);
 
         html += `
             <div class="inspection-list-card">
@@ -204,6 +205,9 @@ function loadInspectionList(type) {
                 <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
                 <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
                 <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+                <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
+                    <strong>Failures:</strong> ${failureCount}
+                </div>
         `;
 
         if (isCompleted) {
@@ -249,14 +253,15 @@ function loadQAReviewList() {
     let html = "";
 
     filteredRecords.forEach(record => {
-        const inspectionId = getRecordValue(record, ["Inspection ID", "InspectionID", "InspectionIDText"]);
-        const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
-        const formId = getRecordValue(record, ["Form ID", "FormID"]);
-        const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
-        const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+        const inspectionId = getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]);
+        const formId = getRecordValue(record, ["FormID", "Form ID"]);
+        const department = getRecordValue(record, ["Department", "Responsible Department Text"]);
+        const submittedBy = getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"]);
         const status = getRecordValue(record, ["Status", "Status Value"]);
-        const completion = getRecordValue(record, ["Completion %", "Completion"]);
-        const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
+        const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
+        const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+        const failureCount = getFailureCount(inspectionId);
 
         html += `
             <div class="inspection-list-card">
@@ -268,6 +273,9 @@ function loadQAReviewList() {
                 <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
                 <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
                 <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+                <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
+                    <strong>Failures:</strong> ${failureCount}
+                </div>
 
                 <span class="status-pill ${statusClass(status)}">${status}</span>
 
@@ -301,12 +309,12 @@ function viewInspectionDetails(inspectionId, returnType) {
     }
 
     const record = inspectionRecords.find(item => {
-        const id = getRecordValue(item, ["Inspection ID", "InspectionID", "InspectionIDText"]);
+        const id = getRecordValue(item, ["InspectionID", "Inspection ID", "InspectionIDText"]);
         return id === inspectionId;
     });
 
     const responses = inspectionResponses.filter(item => {
-        const id = getRecordValue(item, ["InspectionIDText", "Inspection ID", "Inspection"]);
+        const id = getRecordValue(item, ["InspectionID", "InspectionIDText", "Inspection ID", "Inspection"]);
         return id === inspectionId;
     });
 
@@ -321,16 +329,17 @@ function viewInspectionDetails(inspectionId, returnType) {
         return;
     }
 
-    const name = getRecordValue(record, ["Inspection Name", "Title", "Form Name Text"]);
-    const formId = getRecordValue(record, ["Form ID", "FormID"]);
-    const department = getRecordValue(record, ["Responsible Department Text", "Department"]);
-    const submittedBy = getRecordValue(record, ["Responsible Person", "SubmittedByEmail", "Submitted By"]);
+    const name = getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]);
+    const formId = getRecordValue(record, ["FormID", "Form ID"]);
+    const department = getRecordValue(record, ["Department", "Responsible Department Text"]);
+    const submittedBy = getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"]);
     const status = getRecordValue(record, ["Status", "Status Value"]);
-    const submittedDate = getRecordValue(record, ["Submitted Date", "SubmittedDate"]);
-    const completion = getRecordValue(record, ["Completion %", "Completion"]);
-    const qaReviewer = getRecordValue(record, ["QA Reviewer", "QAReviewer"]);
-    const qaReviewDate = getRecordValue(record, ["QA Review Date", "QAReviewDate"]);
-    const qaComments = getRecordValue(record, ["QA Comments", "QAComments"]);
+    const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+    const completion = getRecordValue(record, ["CompletionPercent", "Completion %", "Completion"]);
+    const qaReviewer = getRecordValue(record, ["QAReviewer", "QA Reviewer"]);
+    const qaReviewDate = formatDate(getRecordValue(record, ["QAReviewDate", "QA Review Date"]));
+    const qaComments = getRecordValue(record, ["QAComments", "QA Comments", "Comments"]);
+    const failureCount = getFailureCount(inspectionId);
 
     let html = `
         <div class="inspection-info">
@@ -341,6 +350,7 @@ function viewInspectionDetails(inspectionId, returnType) {
             <p><strong>Submitted By:</strong> ${submittedBy}</p>
             <p><strong>Submitted Date:</strong> ${submittedDate}</p>
             <p><strong>Completion:</strong> ${completion}%</p>
+            <p class="${failureCount > 0 ? "failure-row" : ""}"><strong>Failures:</strong> ${failureCount}</p>
             <p><strong>Status:</strong> ${status}</p>
     `;
 
@@ -364,10 +374,10 @@ function viewInspectionDetails(inspectionId, returnType) {
         `;
     } else {
         responses.forEach(response => {
-            const checklistItem = getRecordValue(response, ["ChecklistItemText", "Checklist Item", "Title"]);
-            const requirement = getRecordValue(response, ["Requirement Text", "Requirement"]);
+            const checklistItem = getRecordValue(response, ["ChecklistItem", "ChecklistItemText", "Checklist Item", "Title"]);
+            const requirement = getRecordValue(response, ["Requirement", "Requirement Text"]);
             const answer = getRecordValue(response, ["Response", "Response Value"]) || "N/A";
-            const comment = getRecordValue(response, ["Comment", "Comments"]);
+            const comment = getRecordValue(response, ["Comments", "Comment"]);
 
             html += `
                 <div class="response-card ${responseClass(answer)}">
@@ -453,6 +463,14 @@ function submitQAReview(inspectionId, decision) {
     }
 }
 
+function getFailureCount(inspectionId) {
+    return inspectionResponses.filter(response => {
+        const responseInspectionId = getRecordValue(response, ["InspectionID", "InspectionIDText", "Inspection ID", "Inspection"]);
+        const answer = getRecordValue(response, ["Response", "Response Value"]);
+        return responseInspectionId === inspectionId && answer === "Fail";
+    }).length;
+}
+
 function getRecordValue(record, possibleNames) {
     for (const name of possibleNames) {
         if (record[name] !== undefined && record[name] !== null && record[name] !== "") {
@@ -496,6 +514,20 @@ function responseClass(response) {
     }
 
     return "response-na";
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "";
+    }
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleString("en-US");
 }
 
 function cleanText(value) {
