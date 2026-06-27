@@ -136,6 +136,7 @@
             <button class="menu-button" onclick="showOpenInspections()">Open Inspections</button>
             <button class="menu-button" onclick="showQAReview()">QA Review</button>
             <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
+            <button class="menu-button" onclick="showReportCenter()">Generate Report Summary</button>
         </div>
 
     </div>
@@ -195,6 +196,72 @@
             </div>
 
             <div id="completedInspectionList"></div>
+
+        </div>
+    </div>
+
+    <div id="reportCenterPanel" class="hidden">
+        <div class="inspection-card">
+
+            <div class="inspection-header-row">
+                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <h2>Report Center</h2>
+            </div>
+
+            <div class="report-filter-grid">
+
+                <div>
+                    <label><strong>Start Date</strong></label>
+                    <input type="date" id="reportStartDate">
+                </div>
+
+                <div>
+                    <label><strong>End Date</strong></label>
+                    <input type="date" id="reportEndDate">
+                </div>
+
+                <div>
+                    <label><strong>Department</strong></label>
+                    <select id="reportDepartment">
+                        <option value="All">All</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label><strong>Inspection</strong></label>
+                    <select id="reportInspection">
+                        <option value="All">All</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label><strong>Status</strong></label>
+                    <select id="reportStatus">
+                        <option value="All">All</option>
+                        <option value="Awaiting QA">Awaiting QA</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label><strong>Report Type</strong></label>
+                    <select id="reportType">
+                        <option value="Detailed">Detailed Audit Report</option>
+                        <option value="Summary">Executive Summary</option>
+                        <option value="Failed">Failed Findings Only</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="report-actions">
+                <button class="detail-button" onclick="generateReport()">Generate Report</button>
+                <button class="approve-button" onclick="printReport()">Print / Save as PDF</button>
+                <button class="back-button" onclick="clearReport()">Clear Report</button>
+            </div>
+
+            <div id="reportOutput" class="report-output"></div>
 
         </div>
     </div>
