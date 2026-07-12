@@ -2,23 +2,24 @@ let inspections = [];
 let checklistItems = [];
 let inspectionRecords = [];
 let inspectionResponses = [];
+let activeQueueFilter = "open";
 
 async function loadData() {
-    const formsResponse = await fetch("./data/forms.json");
-    inspections = await formsResponse.json();
+    const paths = ["forms.json", "checklist-items.json", "inspection-records.json", "inspection-responses.json"];
+    const responses = await Promise.all(paths.map(path => fetch(`./data/${path}`)));
+    const failedResponse = responses.find(response => !response.ok);
 
-    const checklistResponse = await fetch("./data/checklist-items.json");
-    checklistItems = await checklistResponse.json();
+    if (failedResponse) {
+        throw new Error(`Could not load QCMS data (${failedResponse.status}).`);
+    }
 
-    const recordsResponse = await fetch("./data/inspection-records.json");
-    inspectionRecords = await recordsResponse.json();
-
-    const responsesResponse = await fetch("./data/inspection-responses.json");
-    inspectionResponses = await responsesResponse.json();
+    [inspections, checklistItems, inspectionRecords, inspectionResponses] =
+        await Promise.all(responses.map(response => response.json()));
 
     populateInspectionDropdown();
     populateReportFilters();
     updateDashboard();
+    renderAttentionList();
 }
 
 function populateInspectionDropdown() {
@@ -178,9 +179,16 @@ function showInspection() {
 }
 
 function showOpenInspections() {
+    showInspectionQueue("open");
+}
+
+function showInspectionQueue(filter = "open") {
+    activeQueueFilter = filter;
     hideAllPanels();
     document.getElementById("openInspectionsPanel").classList.remove("hidden");
-    loadInspectionList("open");
+    document.getElementById("inspectionQueueTitle").textContent = getQueueTitle(filter);
+    document.getElementById("inspectionSearch").value = "";
+    loadInspectionQueue();
 }
 
 function showQAReview() {
@@ -219,11 +227,137 @@ function backToHome() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await loadData();
-
-    const inspectionSelect = document.getElementById("inspectionSelect");
-    inspectionSelect.addEventListener("change", loadInspection);
+    try {
+        await loadData();
+        document.getElementById("inspectionSelect").addEventListener("change", loadInspection);
+        document.getElementById("inspectionSearch").addEventListener("input", loadInspectionQueue);
+        document.getElementById("inspectionSort").addEventListener("change", loadInspectionQueue);
+    } catch (error) {
+        document.getElementById("attentionList").innerHTML = `
+            <div class="empty-state error-state">
+                QCMS data could not be loaded. Refresh the page or verify the data files are available.
+            </div>`;
+        console.error(error);
+    }
 });
+
+function getQueueTitle(filter) {
+    return ({
+        all: "All Inspections",
+        approved: "Approved Inspections",
+        rejected: "Rejected Inspections",
+        pastDue: "Past-Due Inspections",
+        failures: "Inspections with Failures",
+        attention: "Inspections Needing Attention",
+        open: "Open Inspections"
+    })[filter] || "Inspections";
+}
+
+function recordMatchesQueue(record, filter) {
+    const status = getRecordValue(record, ["Status", "Status Value"]);
+    const inspectionId = getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]);
+    const hasFailures = getFailureCount(inspectionId) > 0;
+
+    if (filter === "all") return true;
+    if (filter === "approved") return status === "Approved";
+    if (filter === "rejected") return status === "Rejected";
+    if (filter === "pastDue") return isPastDue(record);
+    if (filter === "failures") return hasFailures;
+    if (filter === "attention") return isPastDue(record) || (hasFailures && status === "Awaiting QA");
+    return status !== "Approved" && status !== "Rejected";
+}
+
+function loadInspectionQueue() {
+    const search = document.getElementById("inspectionSearch").value.trim().toLowerCase();
+    const sort = document.getElementById("inspectionSort").value;
+    const records = inspectionRecords
+        .filter(record => recordMatchesQueue(record, activeQueueFilter))
+        .filter(record => !search || [
+            getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]),
+            getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]),
+            getRecordValue(record, ["Department", "Responsible Department Text"]),
+            getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"])
+        ].some(value => String(value).toLowerCase().includes(search)))
+        .sort((a, b) => compareInspectionRecords(a, b, sort));
+
+    document.getElementById("inspectionResultCount").textContent =
+        `${records.length} inspection${records.length === 1 ? "" : "s"}`;
+    renderInspectionCards(document.getElementById("openInspectionList"), records, "queue");
+}
+
+function compareInspectionRecords(a, b, sort) {
+    const dateA = new Date(getRecordValue(a, ["SubmittedDate", "Submitted Date"])).getTime() || 0;
+    const dateB = new Date(getRecordValue(b, ["SubmittedDate", "Submitted Date"])).getTime() || 0;
+
+    if (sort === "newest") return dateB - dateA;
+    if (sort === "oldest") return dateA - dateB;
+    if (sort === "name") {
+        return String(getRecordValue(a, ["Title", "Inspection Name", "Form Name Text"]))
+            .localeCompare(String(getRecordValue(b, ["Title", "Inspection Name", "Form Name Text"])));
+    }
+
+    const priority = record => isPastDue(record) ? 0 : getFailureCount(
+        getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"])
+    ) > 0 ? 1 : 2;
+    return priority(a) - priority(b) || dateA - dateB;
+}
+
+function renderAttentionList() {
+    const records = inspectionRecords
+        .filter(record => recordMatchesQueue(record, "attention"))
+        .sort((a, b) => compareInspectionRecords(a, b, "priority"));
+    const container = document.getElementById("attentionList");
+
+    if (!records.length) {
+        container.innerHTML = '<div class="empty-state">No past-due inspections or QA submissions with failed findings.</div>';
+        return;
+    }
+
+    container.innerHTML = records.slice(0, 4).map(record => {
+        const id = getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]);
+        const department = getRecordValue(record, ["Department", "Responsible Department Text"]);
+        const failures = getFailureCount(id);
+        const reason = isPastDue(record) ? "Past due" : `${failures} failed finding${failures === 1 ? "" : "s"}`;
+
+        return `
+            <button class="attention-item" onclick="viewInspectionDetails('${escapeAttribute(id)}', 'attention')">
+                <span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(department)} &middot; ${escapeHtml(id)}</small></span>
+                <span class="attention-reason">${escapeHtml(reason)}</span>
+            </button>`;
+    }).join("");
+}
+
+function renderInspectionCards(container, records, returnType) {
+    if (!records.length) {
+        container.innerHTML = '<div class="empty-state">No inspections match this view.</div>';
+        return;
+    }
+
+    container.innerHTML = records.map(record => {
+        const inspectionId = getRecordValue(record, ["InspectionID", "Inspection ID", "InspectionIDText"]);
+        const name = getRecordValue(record, ["Title", "Inspection Name", "Form Name Text"]);
+        const department = getRecordValue(record, ["Department", "Responsible Department Text"]);
+        const submittedBy = getRecordValue(record, ["SubmittedByEmail", "Responsible Person", "Submitted By"]);
+        const status = getRecordValue(record, ["Status", "Status Value"]) || "Open";
+        const dueDate = formatDateOnly(getRecordValue(record, ["DueDate", "Due Date"]));
+        const submittedDate = formatDate(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+        const failureCount = getFailureCount(inspectionId);
+
+        return `
+            <article class="inspection-list-card">
+                <div class="card-heading"><h3>${escapeHtml(name)}</h3><span class="status-pill ${statusClass(status)}">${escapeHtml(status)}</span></div>
+                <div class="record-meta-grid">
+                    <div><span>Department</span><strong>${escapeHtml(department || "Not set")}</strong></div>
+                    <div><span>Submitted</span><strong>${escapeHtml(submittedDate || "Not recorded")}</strong></div>
+                    <div><span>Due</span><strong class="${isPastDue(record) ? "failure-row" : ""}">${escapeHtml(dueDate || "Not set")}</strong></div>
+                    <div><span>Failed findings</span><strong class="${failureCount ? "failure-row" : ""}">${failureCount}</strong></div>
+                </div>
+                <p class="record-id">${escapeHtml(inspectionId)} &middot; ${escapeHtml(submittedBy)}</p>
+                <button class="detail-button" onclick="viewInspectionDetails('${escapeAttribute(inspectionId)}', '${returnType}')">View details</button>
+            </article>`;
+    }).join("");
+}
 
 function loadInspection() {
     const selectedId = document.getElementById("inspectionSelect").value;
@@ -445,6 +579,12 @@ function viewInspectionDetails(inspectionId, returnType) {
     } else if (returnType === "qa") {
         backButton.textContent = "← Back to QA Review";
         backButton.onclick = showQAReview;
+    } else if (returnType === "attention") {
+        backButton.textContent = "Back to Dashboard";
+        backButton.onclick = backToHome;
+    } else if (returnType === "queue") {
+        backButton.textContent = `Back to ${getQueueTitle(activeQueueFilter)}`;
+        backButton.onclick = () => showInspectionQueue(activeQueueFilter);
     } else {
         backButton.textContent = "← Back to Open Inspections";
         backButton.onclick = showOpenInspections;
@@ -904,7 +1044,12 @@ function isPastDue(record) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const dueDate = new Date(dueDateValue);
+    const dueDate = parseDateValue(dueDateValue);
+
+    if (isNaN(dueDate.getTime())) {
+        return false;
+    }
+
     dueDate.setHours(0, 0, 0, 0);
 
     return dueDate < today;
@@ -1028,7 +1173,7 @@ function formatDateOnly(value) {
         return "";
     }
 
-    const date = new Date(value);
+    const date = parseDateValue(value);
 
     if (isNaN(date.getTime())) {
         return value;
@@ -1048,6 +1193,24 @@ function escapeHtml(value) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+}
+
+function parseDateValue(value) {
+    const dateOnlyMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (dateOnlyMatch) {
+        return new Date(
+            Number(dateOnlyMatch[1]),
+            Number(dateOnlyMatch[2]) - 1,
+            Number(dateOnlyMatch[3])
+        );
+    }
+
+    return new Date(value);
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value).replaceAll("`", "&#096;");
 }
 
 function cleanText(value) {
