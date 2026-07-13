@@ -27,7 +27,7 @@
 - [x] Corrective actions and workflow history are created once under retry. Corrective-action closure uses unique `EventKey`; escalation retry reuses the existing row ID.
 - [x] Overdue monitoring suppresses duplicate escalation notices and has separate error handling for email. Outbound delivery remains intentionally gated pending the controlled recipient test.
 - [ ] Snapshot publishing is serialized, paginated, and commits records and responses together.
-- [x] Audit package uses requested dates and saves a controlled artifact with metadata. The live flow now writes timestamped HTML artifacts to the private QCMS Reports library; Corrective Actions and Workflow History sections remain an explicit completeness enhancement before regulatory signoff.
+- [x] Audit package uses requested dates and saves a controlled artifact with metadata. The live flow now retrieves Inspection Records, Inspection Responses, Corrective Actions, and Workflow History with requested-period filters and pagination, then writes timestamped HTML artifacts to the private QCMS Reports library. Corrective Actions and Workflow History still require normalized HTML sections before regulatory signoff.
 
 ## Go-live data gate
 

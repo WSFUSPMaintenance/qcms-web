@@ -16,11 +16,11 @@
 | Submit to QA | State update occurs after complete response validation | Prior live run evidence; must repeat after final solution export | Revalidation required |
 | QA approval | Authorized response updates exactly one Awaiting QA record | Prior live run evidence; final authorization test pending | Revalidation required |
 | QA rejection | Comments required; corrective actions/history idempotent | Prior live run evidence; retry test pending | Revalidation required |
-| Corrective closure | Notes required; ClosedDate/history written once | Specification complete; live implementation pending | Blocked by live access |
-| Overdue escalation | Levels, department routing, retry, and duplicate suppression | Specification/filter complete; live loop pending | Blocked by live access |
+| Corrective closure | Notes required; ClosedDate/history written once | Live flow and EventKey uniqueness verified; run `08584176475833492467068376974CU15` passed | Passed |
+| Overdue escalation | Levels, department routing, retry, and duplicate suppression | Live query, reservation, failed-row reuse, and routing passed; outbound delivery remains gated | Controlled delivery test required |
 | Snapshot publisher | Serialized, paginated, coordinated commit, governed secret | Legacy exports disabled; replacement pending | Blocked by live access/token rotation |
-| Audit package | Requested dates; escaped HTML artifact and metrics | Deterministic generator and browser-verified sample pass; live corrective-action/history retrieval and controlled SharePoint storage remain | Live completion required |
-| SharePoint schema | Unique/indexed keys and target fields | Machine-readable target complete; live application pending | Blocked by live access |
-| Forms | Organization auth, authoritative identity, negative cases | Specification complete; tenant settings verification pending | Blocked by live access |
+| Audit package | Requested dates; escaped HTML artifact and metrics | Live run `08584176220107551792178553093CU15` passed all four paginated SharePoint reads and controlled storage; corrective-action/history rendering remains | Live completion required |
+| SharePoint schema | Unique/indexed keys and target fields | Schedule schema/785-row load complete; response, record, corrective-action, escalation, and department constraints remain | Live completion required |
+| Forms | Organization auth, authoritative identity, negative cases | Specification complete; tenant settings verification pending | Tenant verification required |
 
 Production release is not approved while any row is marked Blocked, Pending implementation, or Revalidation required.
