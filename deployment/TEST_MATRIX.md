@@ -19,7 +19,7 @@
 | Corrective closure | Notes required; ClosedDate/history written once | Live flow and EventKey uniqueness verified; run `08584176475833492467068376974CU15` passed | Passed |
 | Overdue escalation | Levels, department routing, retry, and duplicate suppression | Live query, reservation, failed-row reuse, and routing passed; outbound delivery remains gated | Controlled delivery test required |
 | Snapshot publisher | Serialized, paginated, coordinated commit, governed secret | Legacy exports disabled; replacement pending | Blocked by live access/token rotation |
-| Audit package | Requested dates; escaped HTML artifact and metrics | Live run `08584176220107551792178553093CU15` passed all four paginated SharePoint reads and controlled storage; corrective-action/history rendering remains | Live completion required |
+| Audit package | Requested dates; controlled HTML artifact with three normalized audit sections | Live run `08584176207182908895864449464CU12` passed every retrieval, table-rendering, and storage action; 11,282-byte artifact verified | Passed |
 | SharePoint schema | Unique/indexed keys and target fields | Schedule, Inspection Records, and Corrective Actions constraints complete; ResponseKey unique/indexed with required deferred until test-data wipe | Live completion required |
 | Forms | Organization auth, authoritative identity, negative cases | Specification complete; tenant settings verification pending | Tenant verification required |
 
