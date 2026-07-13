@@ -25,6 +25,10 @@ jobs:
         run: |
           node tools/generate-schedule.mjs
           git diff --exit-code -- deployment/initial-inspection-schedule.csv
+      - name: Verify deterministic sample audit package
+        run: |
+          node tools/generate-audit-report.mjs
+          git diff --exit-code -- deployment/sample-audit-report.html
       - name: Verify sanitized snapshot contract
         run: |
           node tools/sanitize-snapshots.mjs

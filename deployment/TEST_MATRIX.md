@@ -19,7 +19,7 @@
 | Corrective closure | Notes required; ClosedDate/history written once | Specification complete; live implementation pending | Blocked by live access |
 | Overdue escalation | Levels, department routing, retry, and duplicate suppression | Specification/filter complete; live loop pending | Blocked by live access |
 | Snapshot publisher | Serialized, paginated, coordinated commit, governed secret | Legacy exports disabled; replacement pending | Blocked by live access/token rotation |
-| Audit package | Requested dates; controlled artifact and metadata | Specification/audit finding only | Pending implementation |
+| Audit package | Requested dates; escaped HTML artifact and metrics | Deterministic generator and browser-verified sample pass; live corrective-action/history retrieval and controlled SharePoint storage remain | Live completion required |
 | SharePoint schema | Unique/indexed keys and target fields | Machine-readable target complete; live application pending | Blocked by live access |
 | Forms | Organization auth, authoritative identity, negative cases | Specification complete; tenant settings verification pending | Blocked by live access |
 

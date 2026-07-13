@@ -1,4 +1,5 @@
 import { validateQcmsData } from "./lib/data-validation.mjs";
+import { BUSINESS_TIME_ZONE, formatBusinessDate, formatBusinessDateTime, getBusinessDateKey } from "./lib/business-date.mjs";
 
 let inspections = [];
 let checklistItems = [];
@@ -6,7 +7,6 @@ let inspectionRecords = [];
 let inspectionResponses = [];
 let activeQueueFilter = "open";
 let failureCountsByInspection = new Map();
-const BUSINESS_TIME_ZONE = "America/Chicago";
 
 async function loadData() {
     const paths = ["forms.json", "checklist-items.json", "inspection-records.json", "inspection-responses.json"];
@@ -1167,59 +1167,11 @@ function responseClass(response) {
 }
 
 function formatDate(value) {
-    if (!value) {
-        return "";
-    }
-
-    const date = new Date(value);
-
-    if (isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleString("en-US", { timeZone: BUSINESS_TIME_ZONE });
+    return formatBusinessDateTime(value);
 }
 
 function formatDateOnly(value) {
-    if (!value) {
-        return "";
-    }
-
-    const dateOnlyMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-    if (dateOnlyMatch) {
-        return `${Number(dateOnlyMatch[2])}/${Number(dateOnlyMatch[3])}/${dateOnlyMatch[1]}`;
-    }
-
-    const date = new Date(value);
-
-    if (isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleDateString("en-US", { timeZone: BUSINESS_TIME_ZONE });
-}
-
-function getBusinessDateKey(value) {
-    const dateOnlyMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-    if (dateOnlyMatch) {
-        return `${dateOnlyMatch[1]}-${dateOnlyMatch[2]}-${dateOnlyMatch[3]}`;
-    }
-
-    const date = value instanceof Date ? value : new Date(value);
-
-    if (isNaN(date.getTime())) return "";
-
-    const parts = new Intl.DateTimeFormat("en-US", {
-        timeZone: BUSINESS_TIME_ZONE,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }).formatToParts(date);
-    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
-
-    return `${values.year}-${values.month}-${values.day}`;
+    return formatBusinessDate(value);
 }
 
 function escapeHtml(value) {

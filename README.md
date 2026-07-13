@@ -9,6 +9,8 @@ Requirements: Node.js 22 or later.
 ```powershell
 npm test
 node --check app.js
+npm run generate:schedule
+npm run generate:audit
 ```
 
 Serve the directory through an HTTP server; browser security rules prevent reliable JSON loading when `index.html` is opened directly from disk.
@@ -20,3 +22,4 @@ Serve the directory through an HTTP server; browser security rules prevent relia
 - Do not include credentials or non-dashboard personal data in JSON exports.
 - Run the security tests before every deployment.
 - Follow the credential-rotation and engineering controls in `SECURITY.md`.
+- Treat the generated sample audit as a rendering test only; a complete production package must also supply corrective actions and workflow history.
