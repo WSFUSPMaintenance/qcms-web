@@ -20,7 +20,7 @@
 | Overdue escalation | Levels, department routing, retry, and duplicate suppression | Live query, reservation, failed-row reuse, and routing passed; outbound delivery remains gated | Controlled delivery test required |
 | Snapshot publisher | Serialized, paginated, coordinated commit, governed secret | Legacy exports disabled; replacement pending | Blocked by live access/token rotation |
 | Audit package | Requested dates; controlled HTML artifact with three normalized audit sections | Live run `08584176207182908895864449464CU12` passed every retrieval, table-rendering, and storage action; 11,282-byte artifact verified | Passed |
-| SharePoint schema | Unique/indexed keys and target fields | Schedule, Inspection Records, and Corrective Actions constraints complete; ResponseKey unique/indexed with required deferred until test-data wipe | Live completion required |
+| SharePoint schema | Unique/indexed keys and target fields | Schedule, Inspection Records, Corrective Actions, and Escalation Log constraints complete; ResponseKey required remains deferred until test-data wipe | Live completion required |
 | Forms | Organization auth, authoritative identity, negative cases | Specification complete; tenant settings verification pending | Tenant verification required |
 
 Production release is not approved while any row is marked Blocked, Pending implementation, or Revalidation required.
