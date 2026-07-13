@@ -6,7 +6,7 @@
 - [x] Confirm the two legacy per-item GitHub export flows are disabled. Verified live July 13, 2026: flow IDs `41dc601f-e3f0-4c18-b59d-a6636d9aaef5` and `8c83e853-a88e-43a1-8e63-205d26e8f769` are disabled.
 - [x] Confirm no flow export or repository file contains a credential. The repository credential scan passes; historical exports retain redacted Authorization-header structure only so the analyzer can continue to enforce rotation and retirement controls.
 - [ ] Use governed connections or an approved secret store; enable Secure Inputs and Secure Outputs on credential-bearing actions.
-- [ ] Restrict SharePoint lists and report libraries to appropriate QCMS roles.
+- [ ] Restrict SharePoint lists and report libraries to appropriate QCMS roles. Live audit confirms every QCMS list/library inherits the uniquely secured site, Members and Visitors are empty, and the owner group contains only the project owner; provision production role groups before go-live.
 
 ## SharePoint schema gate
 
