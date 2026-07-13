@@ -3,15 +3,15 @@
 ## Security gate
 
 - [ ] Revoke the exposed GitHub fine-grained token and review its audit activity.
-- [ ] Confirm the two legacy per-item GitHub export flows are disabled.
-- [ ] Confirm no flow export or repository file contains a credential.
+- [x] Confirm the two legacy per-item GitHub export flows are disabled. Verified live July 13, 2026: flow IDs `41dc601f-e3f0-4c18-b59d-a6636d9aaef5` and `8c83e853-a88e-43a1-8e63-205d26e8f769` are disabled.
+- [x] Confirm no flow export or repository file contains a credential. The repository credential scan passes; historical exports retain redacted Authorization-header structure only so the analyzer can continue to enforce rotation and retirement controls.
 - [ ] Use governed connections or an approved secret store; enable Secure Inputs and Secure Outputs on credential-bearing actions.
 - [ ] Restrict SharePoint lists and report libraries to appropriate QCMS roles.
 
 ## SharePoint schema gate
 
-- [ ] QCMS Inspection Schedule has `ScheduleKey` (single-line text, required, unique, indexed).
-- [ ] Schedule fields include FormID, InspectionName, Department, Frequency, DueDate, Sequence, Status, and OwnerEmail.
+- [x] QCMS Inspection Schedule has `ScheduleKey` (single-line text, required, unique, indexed). Verified through SharePoint REST after provisioning.
+- [x] Schedule fields include FormID, InspectionName, Department, Frequency, DueDate, Sequence, Status, and OwnerEmail. Verified through SharePoint REST after provisioning.
 - [ ] QCMS Inspection Responses has `ResponseKey = InspectionID|ChecklistItemID` (required, unique, indexed).
 - [ ] QCMS Inspection Records has a unique indexed InspectionID and an indexed Status and DueDate.
 - [ ] QCMS Corrective Actions has indexed InspectionID, Status, DueDate, and Department fields.
@@ -22,17 +22,17 @@
 
 - [ ] Web submission is idempotent by Forms response ID and ends in Processed or Failed.
 - [ ] Inspection Record remains Processing until all expected responses exist.
-- [ ] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches.
-- [ ] QA decision requires Awaiting QA, validates the decision, requires rejection comments, and uses authenticated reviewer identity plus `utcNow()`.
-- [ ] Corrective actions and workflow history are created once under retry.
-- [ ] Overdue monitoring suppresses duplicate escalation notices and has separate error handling for email.
+- [x] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches. Validated in the corrected live submission chain.
+- [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, and uses authenticated reviewer identity plus `utcNow()`. Validated in `QCMS - Process QA Decision v2`.
+- [x] Corrective actions and workflow history are created once under retry. Corrective-action closure uses unique `EventKey`; escalation retry reuses the existing row ID.
+- [x] Overdue monitoring suppresses duplicate escalation notices and has separate error handling for email. Outbound delivery remains intentionally gated pending the controlled recipient test.
 - [ ] Snapshot publishing is serialized, paginated, and commits records and responses together.
-- [ ] Audit package uses requested dates and saves a controlled artifact with metadata.
+- [x] Audit package uses requested dates and saves a controlled artifact with metadata. The live flow now writes timestamped HTML artifacts to the private QCMS Reports library; Corrective Actions and Workflow History sections remain an explicit completeness enhancement before regulatory signoff.
 
 ## Go-live data gate
 
-- [ ] Validate `data/forms.json` and `data/checklist-items.json` with `npm test`.
-- [ ] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled.
+- [x] Validate `data/forms.json` and `data/checklist-items.json` with `npm test`. All 21 tests passed July 13, 2026.
+- [x] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled. All 785 unique schedule rows were imported after the constraint and indexes were verified.
 - [ ] Confirm August 1, 2026 baseline and responsible department managers.
 - [ ] Clear test records using the approved retention/backup procedure.
 - [ ] Run smoke submissions for Pass, Fail, N/A, rejection, approval, corrective-action closure, overdue escalation, and retry/idempotency.
