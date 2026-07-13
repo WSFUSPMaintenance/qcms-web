@@ -33,7 +33,7 @@
 
 - [x] Validate `data/forms.json` and `data/checklist-items.json` with `npm test`. All 21 tests passed July 13, 2026.
 - [x] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled. All 785 unique schedule rows were imported after the constraint and indexes were verified.
-- [ ] Confirm August 1, 2026 baseline and responsible department managers.
+- [x] Confirm August 1, 2026 baseline and responsible department managers. The 785-row schedule begins August 1, 2026, and all four catalog departments have active primary, QA, and backup routing.
 - [ ] Clear test records using the approved retention/backup procedure.
 - [ ] Run smoke submissions for Pass, Fail, N/A, rejection, approval, corrective-action closure, overdue escalation, and retry/idempotency.
 - [ ] Verify dashboard, reports, notification recipients, permissions, mobile layout, and print/PDF output.
