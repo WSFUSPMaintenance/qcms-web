@@ -1,0 +1,99 @@
+{
+  "site": "https://waynefarms.sharepoint.com/teams/USPQAComplianceManagementSystem",
+  "version": "2026-07-12",
+  "lists": [
+    {
+      "title": "QCMS Inspection Schedule",
+      "columns": [
+        { "internalName": "ScheduleKey", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "FormID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "InspectionName", "type": "Text", "required": true },
+        { "internalName": "Department", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "Frequency", "type": "Text", "required": true },
+        { "internalName": "DueDate", "type": "DateTime", "required": true, "indexed": true, "dateOnly": true },
+        { "internalName": "Sequence", "type": "Number", "required": true },
+        { "internalName": "Status", "type": "Choice", "required": true, "indexed": true, "choices": ["Scheduled", "Open", "In Progress", "Awaiting QA", "Approved", "Rejected", "Cancelled"] },
+        { "internalName": "OwnerEmail", "type": "Text", "required": false }
+      ]
+    },
+    {
+      "title": "QCMS Inspection Records",
+      "columns": [
+        { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "ExternalSubmissionID", "type": "Text", "required": false, "indexed": true, "unique": true },
+        { "internalName": "FormID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "Department", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "Status", "type": "Choice", "required": true, "indexed": true, "choices": ["Processing", "In Progress", "Awaiting QA", "Approved", "Rejected", "Failed"] },
+        { "internalName": "DueDate", "type": "DateTime", "required": false, "indexed": true, "dateOnly": true },
+        { "internalName": "SubmittedDate", "type": "DateTime", "required": false },
+        { "internalName": "SubmittedByEmail", "type": "Text", "required": false },
+        { "internalName": "ExpectedResponseCount", "type": "Number", "required": false },
+        { "internalName": "CompletionPercent", "type": "Number", "required": false },
+        { "internalName": "RequiresQA", "type": "Boolean", "required": true, "default": true }
+      ]
+    },
+    {
+      "title": "QCMS Inspection Responses",
+      "columns": [
+        { "internalName": "ResponseKey", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "InspectionIDText", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "ChecklistItemText", "type": "Text", "required": true },
+        { "internalName": "Response", "type": "Choice", "required": true, "choices": ["Pass", "Fail", "N/A"] },
+        { "internalName": "Comments", "type": "Note", "required": false },
+        { "internalName": "CorrectiveActionRequired", "type": "Boolean", "required": true, "default": false }
+      ]
+    },
+    {
+      "title": "QCMS Corrective Actions",
+      "columns": [
+        { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "ChecklistItemID", "type": "Text", "required": true },
+        { "internalName": "Department", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "OwnerEmail", "type": "Text", "required": false },
+        { "internalName": "Status", "type": "Choice", "required": true, "indexed": true, "choices": ["Open", "In Progress", "Closed"] },
+        { "internalName": "DueDate", "type": "DateTime", "required": true, "indexed": true, "dateOnly": true },
+        { "internalName": "ResolutionNotes", "type": "Note", "required": false },
+        { "internalName": "ClosedDate", "type": "DateTime", "required": false }
+      ],
+      "validation": "Status may be Closed only when ResolutionNotes is nonblank"
+    },
+    {
+      "title": "QCMS Escalation Log",
+      "columns": [
+        { "internalName": "EscalationKey", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "CorrectiveActionID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "Department", "type": "Text", "required": true },
+        { "internalName": "EscalationLevel", "type": "Number", "required": true },
+        { "internalName": "Escalated_x0020_On", "displayName": "Escalated On", "type": "DateTime", "required": true },
+        { "internalName": "Escalated_x0020_To_x0020_Email", "displayName": "Escalated To Email", "type": "Text", "required": true },
+        { "internalName": "DeliveryStatus", "type": "Choice", "required": true, "choices": ["Pending", "Sent", "Failed"] },
+        { "internalName": "Details", "type": "Note", "required": false }
+      ]
+    },
+    {
+      "title": "QCMS Workflow History",
+      "columns": [
+        { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "EventType", "type": "Text", "required": true, "indexed": true },
+        { "internalName": "FromStatus", "type": "Text", "required": false },
+        { "internalName": "ToStatus", "type": "Text", "required": false },
+        { "internalName": "ActorEmail", "type": "Text", "required": false },
+        { "internalName": "EventDate", "type": "DateTime", "required": true, "indexed": true },
+        { "internalName": "Details", "type": "Note", "required": false }
+      ]
+    },
+    {
+      "title": "QCMS Departments",
+      "columns": [
+        { "internalName": "Title", "displayName": "Department", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "DepartmentCode", "type": "Text", "required": true, "indexed": true, "unique": true },
+        { "internalName": "DepartmentManager", "type": "User", "required": true },
+        { "internalName": "QAReviewer", "type": "User", "required": true },
+        { "internalName": "BackupManager", "type": "User", "required": false },
+        { "internalName": "DepartmentEmail", "type": "Text", "required": false },
+        { "internalName": "Active", "type": "Boolean", "required": true, "default": true }
+      ]
+    }
+  ]
+}
