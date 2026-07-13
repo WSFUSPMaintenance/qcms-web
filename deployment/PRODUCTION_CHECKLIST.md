@@ -41,6 +41,6 @@
 ## Release gate
 
 - [ ] Export and archive the final Power Automate solution and SharePoint schema inventory.
-- [ ] Record flow owners, connections, support contacts, recovery procedure, and rollback plan.
+- [x] Record flow owners, connections, support contacts, recovery procedure, and rollback plan in `OPERATIONS_RUNBOOK.md`. Secondary ownership and the approved support distribution list remain cutover requirements.
 - [ ] Enable outbound notifications only after routing tests pass.
 - [ ] Capture go-live approval and deployment timestamp in the engineering log.
