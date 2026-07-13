@@ -14,7 +14,7 @@
 - [x] Schedule fields include FormID, InspectionName, Department, Frequency, DueDate, Sequence, Status, and OwnerEmail. Verified through SharePoint REST after provisioning.
 - [ ] QCMS Inspection Responses has `ResponseKey = InspectionID|ChecklistItemID` (required, unique, indexed). Unique/indexed is live; enable required after the approved test-data wipe because 31 legacy test rows predate the key.
 - [x] QCMS Inspection Records has a required, unique, indexed Inspection ID and indexed Status and Due Date. Verified through SharePoint REST July 13, 2026 (`field_1`, `field_8`, and `field_5`).
-- [ ] QCMS Corrective Actions has indexed InspectionID, Status, DueDate, and Department fields.
+- [x] QCMS Corrective Actions has indexed InspectionID, Status, DueDate, and Department fields. All four live indexes were verified through SharePoint REST July 13, 2026.
 - [ ] QCMS Escalation Log uses `Escalated On` (Date/Time) and `Escalated To Email` (Text); retire the obsolete number columns from views.
 - [ ] QCMS Departments contains an active row and manager/reviewer routing for every catalog department.
 
