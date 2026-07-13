@@ -4,6 +4,7 @@
   "lists": [
     {
       "title": "QCMS Inspection Schedule",
+      "provisioning": "new-list",
       "columns": [
         { "internalName": "ScheduleKey", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "FormID", "type": "Text", "required": true, "indexed": true },
@@ -18,6 +19,8 @@
     },
     {
       "title": "QCMS Inspection Records",
+      "existingGuid": "f063543e-076d-4aff-9821-0311a2acc14e",
+      "provisioning": "additive-migration",
       "columns": [
         { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "ExternalSubmissionID", "type": "Text", "required": false, "indexed": true, "unique": true },
@@ -34,6 +37,8 @@
     },
     {
       "title": "QCMS Inspection Responses",
+      "existingGuid": "2e6a665e-fbe1-4ee5-9f8d-89e617982c97",
+      "provisioning": "additive-migration",
       "columns": [
         { "internalName": "ResponseKey", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "InspectionIDText", "type": "Text", "required": true, "indexed": true },
@@ -45,6 +50,8 @@
     },
     {
       "title": "QCMS Corrective Actions",
+      "existingGuid": "9a4fb9df-a3de-4ab4-a7c7-c5ac7c929149",
+      "provisioning": "additive-migration",
       "columns": [
         { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true },
         { "internalName": "ChecklistItemID", "type": "Text", "required": true },
@@ -59,6 +66,8 @@
     },
     {
       "title": "QCMS Escalation Log",
+      "existingGuid": "8ba08827-5f8e-47a5-8cc3-7b5fbda4d4cc",
+      "provisioning": "additive-migration",
       "columns": [
         { "internalName": "EscalationKey", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "CorrectiveActionID", "type": "Text", "required": true, "indexed": true },
@@ -73,7 +82,10 @@
     },
     {
       "title": "QCMS Workflow History",
+      "existingGuid": "a9ec78bb-a4ac-4d44-8d06-1eb6e80bdbf9",
+      "provisioning": "additive-migration",
       "columns": [
+        { "internalName": "EventKey", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "InspectionID", "type": "Text", "required": true, "indexed": true },
         { "internalName": "EventType", "type": "Text", "required": true, "indexed": true },
         { "internalName": "FromStatus", "type": "Text", "required": false },
@@ -85,6 +97,8 @@
     },
     {
       "title": "QCMS Departments",
+      "existingGuid": "64b77d53-a5d1-4751-952e-ede4020ebd6c",
+      "provisioning": "additive-migration",
       "columns": [
         { "internalName": "Title", "displayName": "Department", "type": "Text", "required": true, "indexed": true, "unique": true },
         { "internalName": "DepartmentCode", "type": "Text", "required": true, "indexed": true, "unique": true },
