@@ -14,7 +14,7 @@
 | Snapshot integrity | Malformed/duplicate/orphan catalog data rejected | Automated tests pass; valid data loads in browser | Passed |
 | Web submission | Pass/Fail/N/A creates exactly one record and expected responses | Fresh Forms response 41 passed July 13, 2026: bridge 47 reached Processed, inspection 44 transitioned from Processing to Awaiting QA at 100%, and keyed response 113 linked correctly. Replaying response 40 was rejected by the unique ExternalSubmissionID constraint without a secondary recovery-action failure. | Passed |
 | Submit to QA | State update occurs after complete response validation | Prior live run evidence; must repeat after final solution export | Revalidation required |
-| QA approval | Authorized response updates exactly one Awaiting QA record | Prior live run evidence; final authorization test pending | Revalidation required |
+| QA approval | Authorized response updates exactly one Awaiting QA record | Controlled Forms response passed July 13, 2026 after replacing the optional form date with server `utcNow()`: Inspection Record 44 moved from Awaiting QA to Approved and Workflow History item 6 recorded the authenticated reviewer. | Passed |
 | QA rejection | Comments required; corrective actions/history idempotent | Prior live run evidence; retry test pending | Revalidation required |
 | Corrective closure | Notes required; ClosedDate/history written once | Live flow and EventKey uniqueness verified; run `08584176475833492467068376974CU15` passed | Passed |
 | Overdue escalation | Levels, department routing, retry, and duplicate suppression | Live query, reservation, failed-row reuse, and routing passed; outbound delivery remains gated | Controlled delivery test required |

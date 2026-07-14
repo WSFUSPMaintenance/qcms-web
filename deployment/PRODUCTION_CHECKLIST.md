@@ -16,6 +16,7 @@
 - [x] QCMS Inspection Records has a required, unique, indexed Inspection ID and indexed Status and Due Date. Verified through SharePoint REST July 13, 2026 (`field_1`, `field_8`, and `field_5`).
 - [x] QCMS Corrective Actions has indexed InspectionID, Status, DueDate, and Department fields. All four live indexes were verified through SharePoint REST July 13, 2026.
 - [x] QCMS Escalation Log uses `Escalated On` (Date/Time) and `Escalated To Email` (Text); obsolete numeric `Escalation Date` and `Escalated To` columns are hidden from the default view. `EscalationKey` is required, unique, and indexed.
+- [x] QCMS Workflow History `EventDate` stores and displays full date-and-time values rather than truncating audit events to date-only.
 - [x] QCMS Departments contains an active row plus Department Manager, QA Reviewer, and Backup Manager routing for every catalog department: Production, Sanitation, Maintenance, and QA.
 
 ## Workflow gate
