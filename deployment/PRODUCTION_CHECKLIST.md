@@ -21,8 +21,8 @@
 ## Workflow gate
 
 - [x] Web submission stores the Microsoft Forms response ID in `ExternalSubmissionID` and ends in an explicit Processed or Failed bridge state. Controlled run validation passed July 13, 2026.
-- [ ] Enforce uniqueness on `QCMS Web Submission Bridge.ExternalSubmissionID` after the approved test-data wipe, then repeat the same-trigger retry test to close strict idempotency.
-- [ ] Inspection Record remains Processing until all expected responses exist.
+- [x] `QCMS Web Submission Bridge.ExternalSubmissionID` is indexed and unique. A same-trigger replay was rejected without creating duplicate downstream records, and the failure-recovery action no longer attempts to update a bridge row that was never created. `Required` remains deferred until the approved test-data wipe because legacy rows contain null identifiers.
+- [x] Inspection Record remains Processing until all expected responses exist, then transitions to Awaiting QA with 100% completion and `RequiresQA=true`. Fresh Forms response `41` validated the full lifecycle July 13, 2026.
 - [x] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches. Validated in the corrected live submission chain.
 - [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, and uses authenticated reviewer identity plus `utcNow()`. Validated in `QCMS - Process QA Decision v2`.
 - [x] Corrective actions and workflow history are created once under retry. Corrective-action closure uses unique `EventKey`; escalation retry reuses the existing row ID.
