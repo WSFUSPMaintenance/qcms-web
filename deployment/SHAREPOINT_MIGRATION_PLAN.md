@@ -12,14 +12,15 @@ The live lists predate the final schema and several business columns use generat
 | QCMS Departments | `64b77d53-a5d1-4751-952e-ede4020ebd6c` |
 | QCMS Escalation Log | `8ba08827-5f8e-47a5-8cc3-7b5fbda4d4cc` |
 | QCMS Workflow History | `a9ec78bb-a4ac-4d44-8d06-1eb6e80bdbf9` |
+| QCMS Inspection Schedule | `b1ac096e-2a77-40d5-accc-5904fa74e843` |
 
-QCMS Inspection Schedule does not appear in the captured list inventory and must be provisioned as a new list.
+QCMS Inspection Schedule was provisioned July 13, 2026. Its `ScheduleKey` is required, unique, and indexed; FormID, Department, DueDate, and Status are also indexed. The validated 785-row schedule covering August 1, 2026 through July 31, 2027 is loaded.
 
 ## Confirmed current field contracts
 
 QCMS Corrective Actions currently has optional Text fields InspectionID, ChecklistItemID, Department, OwnerEmail, and Status; optional DateTime fields DueDate and ClosedDate; and optional Note field ResolutionNotes.
 
-QCMS Workflow History currently has optional Text fields InspectionID, EventType, FromStatus, ToStatus, and ActorEmail; optional DateTime EventDate; and optional Note Details. Add the unique EventKey column before enabling retry-safe history writes.
+QCMS Workflow History has Text fields InspectionID, EventType, FromStatus, ToStatus, and ActorEmail; DateTime EventDate configured to retain time; Note Details; and deterministic EventKey support for retry-safe events.
 
 ## Known legacy mapping requiring live confirmation
 
@@ -52,7 +53,13 @@ Do not run a backfill until each mapping is verified against the live field endp
 7. Make canonical columns required where specified.
 8. Switch views/Power Apps to canonical columns.
 9. Keep legacy columns hidden for one rollback window; do not delete them during initial release.
-10. Import the validated schedule only after ScheduleKey uniqueness is active.
+10. Import the validated schedule only after ScheduleKey uniqueness is active. Completed July 13, 2026: all 785 rows were loaded after the constraint and indexes were verified.
+
+## Current migration status
+
+- Completed: schedule provisioning and load, Inspection ID uniqueness, response-key uniqueness, inspection/corrective-action query indexes, escalation-key constraint, workflow-history date-time correction, and department-routing coverage.
+- Deferred to the approved pre-go-live wipe: make `QCMS Inspection Responses.ResponseKey` required after legacy null-key test rows are removed.
+- Cutover-only: export schemas and data, run the final solution import, repeat the complete smoke matrix, hide legacy columns for the rollback window, and record the rollback point.
 
 ## Rollback
 
