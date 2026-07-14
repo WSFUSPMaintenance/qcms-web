@@ -4,7 +4,7 @@
 
 The existing canvas app `USP QCMS` (`dd029761-59cc-454b-a993-4c8438888977`) is the production-interface baseline. It already contains `scrHome`, `scrInspectionDetail`, `scrInspectionComplete`, and `scrInspection`, and its preview successfully rendered authenticated SharePoint inspection data.
 
-Current connected data sources are QCMS Departments, Form Catalog, Checklist Items, Inspection Records, Inspection Responses, Escalation Log, and Signature Log. Inspection Schedule, Corrective Actions, Workflow History, and Web Submission Bridge still need to be connected as their screens are implemented.
+Current connected data sources are QCMS Departments, Form Catalog, Checklist Items, Inspection Records, Inspection Responses, Escalation Log, Signature Log, Inspection Schedule, Corrective Actions, Workflow History, and Web Submission Bridge. The four operational sources added on July 14, 2026 remain intentionally unused until their role-specific screens are implemented.
 
 The first live preview defects were repaired in the saved draft on July 14, 2026:
 
@@ -14,7 +14,7 @@ The first live preview defects were repaired in the saved draft on July 14, 2026
 - Approved, Rejected, and Closed records no longer show a waiting age; active records without a submission timestamp show `Waiting: N/A`.
 - App checker formula errors were reduced from 18 to zero by repairing `App.Formulas`, `Title4.Y`, `Due Date.Text`, and `galQuestions.Items`.
 
-Six home KPI delegation warnings remain. They are not functional errors, but production scale requires maintained aggregate values or targeted flows rather than client-side `CountRows(Filter(...))` scans. The current `App.OnStart` still needs role derivation, reference caching, Central-time preferences, and version metadata.
+Six home KPI delegation warnings remain. They are not functional errors, but production scale requires maintained aggregate values or targeted flows rather than client-side `CountRows(Filter(...))` scans. `App.OnStart` now derives Department Manager and QA Reviewer capabilities from the active Department routing list and initializes draft version and Central-time metadata. A governed Administrator role source and additional small-reference caching remain pending.
 
 Do not publish the app until the role-based screen set is regression tested and the KPI aggregation/delegation approach is accepted or replaced.
 
