@@ -40,7 +40,7 @@ Publish all customizations and run Solution checker before every export. The bas
 4. Review `QCMS Escalation Log` for `Failed` or `Skipped` delivery states and preserve the deterministic EscalationKey.
 5. Review corrective actions for overdue open items and confirm each closed item has ResolutionNotes, ClosedDate, and one workflow-history closure event.
 6. Run an audit-package smoke test and confirm a non-empty timestamped HTML file appears in the private QCMS Reports library.
-7. Run `npm test` in `qcms-web`; the release baseline is 21 passing tests.
+7. Run `npm test` and `npm run verify:solution` in `qcms-web`; the release baseline is 23 passing tests plus a checksum- and manifest-verified solution archive.
 
 ## Incident recovery
 

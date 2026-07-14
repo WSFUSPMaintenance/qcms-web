@@ -11,6 +11,7 @@ npm test
 node --check app.js
 npm run generate:schedule
 npm run generate:audit
+npm run verify:solution
 ```
 
 Serve the directory through an HTTP server; browser security rules prevent reliable JSON loading when `index.html` is opened directly from disk.

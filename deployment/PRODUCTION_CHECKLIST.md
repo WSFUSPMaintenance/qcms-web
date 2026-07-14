@@ -33,7 +33,7 @@
 
 ## Go-live data gate
 
-- [x] Validate `data/forms.json` and `data/checklist-items.json` with `npm test`. All 21 tests passed July 13, 2026.
+- [x] Validate catalog, checklist, schedule, security, workflow policy, dashboard snapshots, audit rendering, and the archived solution with `npm test`. All 23 tests passed July 14, 2026.
 - [x] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled. All 785 unique schedule rows were imported after the constraint and indexes were verified.
 - [x] Confirm August 1, 2026 baseline and responsible department managers. The 785-row schedule begins August 1, 2026, and all four catalog departments have active primary, QA, and backup routing.
 - [ ] Clear test records using the approved retention/backup procedure.

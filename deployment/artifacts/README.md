@@ -23,6 +23,8 @@ The ZIP was opened and its package structure verified after download. It contain
 
 Disabled legacy GitHub export flows, the placeholder-response flow, and the superseded QA flow are intentionally excluded. Solution checker completed after publication on July 13, 2026 at 10:02:16 PM with no findings.
 
+Run `npm run verify:solution` from the repository root before deployment or recovery. The check recalculates the checksum, validates the ZIP central directory, requires the three solution metadata files, and confirms that exactly the six intended workflow definitions are present.
+
 ## Import and recovery use
 
 Treat this unmanaged package as the verified pre-production baseline and retain its checksum with any copied release artifact. Before importing into another environment, provision or select the intended SharePoint and Office 365 connections, map all connection references, validate environment-specific SharePoint URLs and list bindings, and keep outbound notifications gated. After import, publish customizations, run Solution checker, and execute the cutover smoke-test matrix before enabling production delivery.
