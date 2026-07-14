@@ -25,7 +25,7 @@
 - [x] `QCMS Web Submission Bridge.ExternalSubmissionID` is indexed and unique. A same-trigger replay was rejected without creating duplicate downstream records, and the failure-recovery action no longer attempts to update a bridge row that was never created. `Required` remains deferred until the approved test-data wipe because legacy rows contain null identifiers.
 - [x] Inspection Record remains Processing until all expected responses exist, then transitions to Awaiting QA with 100% completion and `RequiresQA=true`. Fresh Forms response `41` validated the full lifecycle July 13, 2026.
 - [x] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches. Validated in the corrected live submission chain.
-- [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, and uses authenticated reviewer identity plus `utcNow()`. Validated in `QCMS - Process QA Decision v2`.
+- [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, stores QA Reviewer and server `utcNow()`, and creates failed-item corrective actions. Validated with approval inspection 48 and rejection inspection 49 in `QCMS - Process QA Decision v2`.
 - [x] Corrective actions and workflow history are created once under retry. Corrective-action closure uses unique `EventKey`; escalation retry reuses the existing row ID.
 - [x] Overdue monitoring suppresses duplicate escalation notices and has separate error handling for email. Outbound delivery remains intentionally gated pending the controlled recipient test.
 - [ ] Snapshot publishing is serialized, paginated, and commits records and responses together.
@@ -37,7 +37,7 @@
 - [x] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled. All 785 unique schedule rows were imported after the constraint and indexes were verified.
 - [x] Confirm August 1, 2026 baseline and responsible department managers. The 785-row schedule begins August 1, 2026, and all four catalog departments have active primary, QA, and backup routing.
 - [ ] Clear test records using the approved retention/backup procedure.
-- [ ] Run smoke submissions for Pass, Fail, N/A, rejection, approval, corrective-action closure, overdue escalation, and retry/idempotency.
+- [ ] Run cutover smoke submissions for Pass, Fail, N/A, rejection, approval, corrective-action closure, overdue escalation, and retry/idempotency. Pre-cutover controlled Pass/Fail, rejection, approval, closure, and bridge replay tests are complete; repeat after the approved test-data wipe and final solution import.
 - [ ] Verify dashboard, reports, notification recipients, permissions, mobile layout, and print/PDF output.
 
 ## Release gate
