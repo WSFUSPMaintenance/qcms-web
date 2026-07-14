@@ -4,11 +4,11 @@
 |---|---|---|---|
 | Catalog | Unique form and checklist IDs; every item maps to a form | Automated tests pass | Passed |
 | Schedule | Calendar cadence from 2026-08-01; unique keys; SEC001 excluded | 785 deterministic rows; automated tests pass | Passed |
-| Dashboard | KPI and attention data load | Browser verified: 7 inspections, 4 Awaiting QA, 7 failures | Passed |
-| Navigation | Home → queue → details → queue → home | Browser verified under CSP | Passed |
+| Dashboard | KPI and attention data load | Browser reverified July 13, 2026: 7 inspections, 4 Awaiting QA, 7 failures, 1 past due, and two attention items | Passed |
+| Navigation | Home → queue → filtered list → details → queue → home | Browser reverified under CSP; Maintenance search reduced four open inspections to the intended single record | Passed |
 | Inspection entry | Catalog selection and checklist rendering | Browser verified with OHD001 | Passed |
 | Inspection validation | Missing response blocks bridge | Browser verified `Please answer item 1.` | Passed |
-| Reports | Central date defaults and detailed report generation | Browser verified 2026-07-01 through 2026-07-12 | Passed |
+| Reports | Central date defaults and detailed report generation | Browser reverified July 13, 2026 for 2026-07-01 through 2026-07-13; detailed report rendered one matching inspection, two checklist items, and 100% compliance | Passed |
 | Responsive UI | 390×844 layout | Browser verified no horizontal overflow | Passed |
 | Security | No token patterns, inline handlers, or unsafe script CSP | Automated tests pass | Passed locally |
 | Snapshot integrity | Malformed/duplicate/orphan catalog data rejected | Automated tests pass; valid data loads in browser | Passed |
