@@ -12,7 +12,7 @@
 | Responsive UI | 390×844 layout | Browser verified no horizontal overflow | Passed |
 | Security | No token patterns, inline handlers, or unsafe script CSP | Automated tests pass | Passed locally |
 | Snapshot integrity | Malformed/duplicate/orphan catalog data rejected | Automated tests pass; valid data loads in browser | Passed |
-| Web submission | Pass/Fail/N/A creates exactly one record and expected responses | Prior live run evidence; must repeat after final flow export | Revalidation required |
+| Web submission | Pass/Fail/N/A creates exactly one record and expected responses | Controlled recent-trigger run passed July 13, 2026: bridge item 43 reached Processed, inspection 43 was Awaiting QA, and keyed response 112 linked correctly; duplicate-trigger constraint remains pre-cutover | Retry/idempotency revalidation required |
 | Submit to QA | State update occurs after complete response validation | Prior live run evidence; must repeat after final solution export | Revalidation required |
 | QA approval | Authorized response updates exactly one Awaiting QA record | Prior live run evidence; final authorization test pending | Revalidation required |
 | QA rejection | Comments required; corrective actions/history idempotent | Prior live run evidence; retry test pending | Revalidation required |

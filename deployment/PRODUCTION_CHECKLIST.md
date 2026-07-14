@@ -20,7 +20,8 @@
 
 ## Workflow gate
 
-- [ ] Web submission is idempotent by Forms response ID and ends in Processed or Failed.
+- [x] Web submission stores the Microsoft Forms response ID in `ExternalSubmissionID` and ends in an explicit Processed or Failed bridge state. Controlled run validation passed July 13, 2026.
+- [ ] Enforce uniqueness on `QCMS Web Submission Bridge.ExternalSubmissionID` after the approved test-data wipe, then repeat the same-trigger retry test to close strict idempotency.
 - [ ] Inspection Record remains Processing until all expected responses exist.
 - [x] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches. Validated in the corrected live submission chain.
 - [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, and uses authenticated reviewer identity plus `utcNow()`. Validated in `QCMS - Process QA Decision v2`.
