@@ -18,6 +18,8 @@ Six home KPI delegation warnings remain. They are not functional errors, but pro
 
 The saved draft now includes `scrManagerDashboard`. Its home navigation is visible only when `varCanManageDepartments` is true. The workspace filters QCMS Corrective Actions to the authenticated manager's active Department routing, displays title, status, department, and due date, and opens the authoritative SharePoint action record. Preview regression verified home-to-manager and manager-to-home navigation. App checker remains at zero formula errors; its seventh formula finding is the documented SharePoint delegation warning on the manager gallery's collection-based Department authorization filter.
 
+The saved draft also includes `scrQAQueue`. Its home navigation is visible only when `varCanReviewQA` is true. The queue filters Inspection Records to `Awaiting QA` and Departments represented in `colQAReviewDepartments`, maps the authoritative title, Inspection ID, Department, and status, and opens the existing inspection-detail screen for the selected record. Direct preview verified safe empty-state rendering and return navigation for the authenticated non-reviewer account; the QA home entry remained hidden. App checker remains at zero formula errors with nine delegation warnings total: the six existing home warnings, one manager-gallery warning, and two QA-queue warnings.
+
 Do not publish the app until the role-based screen set is regression tested and the KPI aggregation/delegation approach is accepted or replaced.
 
 ## Architecture decision
