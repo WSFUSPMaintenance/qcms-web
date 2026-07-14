@@ -1,12 +1,19 @@
+import { validateQcmsData } from "./lib/data-validation.mjs";
+import { BUSINESS_TIME_ZONE, formatBusinessDate, formatBusinessDateTime, getBusinessDateKey } from "./lib/business-date.mjs";
+
 let inspections = [];
 let checklistItems = [];
 let inspectionRecords = [];
 let inspectionResponses = [];
 let activeQueueFilter = "open";
+let failureCountsByInspection = new Map();
 
 async function loadData() {
     const paths = ["forms.json", "checklist-items.json", "inspection-records.json", "inspection-responses.json"];
-    const responses = await Promise.all(paths.map(path => fetch(`./data/${path}`)));
+    const snapshotRequest = Date.now();
+    const responses = await Promise.all(paths.map(path =>
+        fetch(`./data/${path}?v=${snapshotRequest}`, { cache: "no-store" })
+    ));
     const failedResponse = responses.find(response => !response.ok);
 
     if (failedResponse) {
@@ -15,6 +22,10 @@ async function loadData() {
 
     [inspections, checklistItems, inspectionRecords, inspectionResponses] =
         await Promise.all(responses.map(response => response.json()));
+
+    validateQcmsData({ forms: inspections, checklistItems, inspectionRecords, inspectionResponses });
+
+    failureCountsByInspection = buildFailureCountIndex(inspectionResponses);
 
     populateInspectionDropdown();
     populateReportFilters();
@@ -73,18 +84,18 @@ function populateReportFilters() {
         inspectionSelect.appendChild(option);
     });
 
-    const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const today = getBusinessDateKey(new Date());
+    const firstDay = `${today.slice(0, 8)}01`;
 
     const startInput = document.getElementById("reportStartDate");
     const endInput = document.getElementById("reportEndDate");
 
     if (startInput && !startInput.value) {
-        startInput.value = formatInputDate(firstDay);
+        startInput.value = firstDay;
     }
 
     if (endInput && !endInput.value) {
-        endInput.value = formatInputDate(today);
+        endInput.value = today;
     }
 }
 
@@ -128,13 +139,10 @@ function updateDashboard() {
 
     if (recordsWithDueDates.length > 0) {
         const onTimeCount = recordsWithDueDates.filter(record => {
-            const submittedDate = new Date(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
-            const dueDate = new Date(getRecordValue(record, ["DueDate", "Due Date"]));
+            const submittedDate = getBusinessDateKey(getRecordValue(record, ["SubmittedDate", "Submitted Date"]));
+            const dueDate = getBusinessDateKey(getRecordValue(record, ["DueDate", "Due Date"]));
 
-            submittedDate.setHours(0, 0, 0, 0);
-            dueDate.setHours(0, 0, 0, 0);
-
-            return submittedDate <= dueDate;
+            return submittedDate && dueDate && submittedDate <= dueDate;
         }).length;
 
         onTimePercent = Math.round((onTimeCount / recordsWithDueDates.length) * 100) + "%";
@@ -176,10 +184,6 @@ function hideAllPanels() {
 function showInspection() {
     hideAllPanels();
     document.getElementById("inspectionPanel").classList.remove("hidden");
-}
-
-function showOpenInspections() {
-    showInspectionQueue("open");
 }
 
 function showInspectionQueue(filter = "open") {
@@ -227,6 +231,8 @@ function backToHome() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("click", handleActionClick);
+
     try {
         await loadData();
         document.getElementById("inspectionSelect").addEventListener("change", loadInspection);
@@ -240,6 +246,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error(error);
     }
 });
+
+function handleActionClick(event) {
+    const button = event.target.closest("[data-action]");
+
+    if (!button) return;
+
+    const actions = {
+        "show-inspection": () => showInspection(),
+        "show-queue": () => showInspectionQueue(button.dataset.filter || "open"),
+        "show-qa": () => showQAReview(),
+        "show-completed": () => showCompletedInspections(),
+        "show-reports": () => showReportCenter(),
+        "home": () => backToHome(),
+        "view-inspection": () => viewInspectionDetails(button.dataset.inspectionId, button.dataset.returnType),
+        "approve-inspection": () => approveInspection(button.dataset.inspectionId),
+        "reject-inspection": () => rejectInspection(button.dataset.inspectionId),
+        "generate-report": () => generateReport(),
+        "print-report": () => printReport(),
+        "clear-report": () => clearReport()
+    };
+
+    actions[button.dataset.action]?.();
+}
 
 function getQueueTitle(filter) {
     return ({
@@ -321,7 +350,7 @@ function renderAttentionList() {
         const reason = isPastDue(record) ? "Past due" : `${failures} failed finding${failures === 1 ? "" : "s"}`;
 
         return `
-            <button class="attention-item" onclick="viewInspectionDetails('${escapeAttribute(id)}', 'attention')">
+            <button class="attention-item" data-action="view-inspection" data-inspection-id="${escapeAttribute(id)}" data-return-type="attention">
                 <span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(department)} &middot; ${escapeHtml(id)}</small></span>
                 <span class="attention-reason">${escapeHtml(reason)}</span>
             </button>`;
@@ -353,8 +382,8 @@ function renderInspectionCards(container, records, returnType) {
                     <div><span>Due</span><strong class="${isPastDue(record) ? "failure-row" : ""}">${escapeHtml(dueDate || "Not set")}</strong></div>
                     <div><span>Failed findings</span><strong class="${failureCount ? "failure-row" : ""}">${failureCount}</strong></div>
                 </div>
-                <p class="record-id">${escapeHtml(inspectionId)} &middot; ${escapeHtml(submittedBy)}</p>
-                <button class="detail-button" onclick="viewInspectionDetails('${escapeAttribute(inspectionId)}', '${returnType}')">View details</button>
+                <p class="record-id">${escapeHtml(inspectionId)} &middot; ${escapeHtml(submittedBy || "Submitter not published")}</p>
+                <button class="detail-button" data-action="view-inspection" data-inspection-id="${escapeAttribute(inspectionId)}" data-return-type="${escapeAttribute(returnType)}">View details</button>
             </article>`;
     }).join("");
 }
@@ -375,9 +404,9 @@ function loadInspection() {
     const items = checklistItems.filter(item => item.formId === selectedId);
 
     info.innerHTML = `
-        <h3>${inspection.id} - ${inspection.name}</h3>
-        <p>Department: <strong>${inspection.department}</strong></p>
-        <p>Frequency: <strong>${inspection.frequency}</strong></p>
+        <h3>${escapeHtml(inspection.id)} - ${escapeHtml(inspection.name)}</h3>
+        <p>Department: <strong>${escapeHtml(inspection.department)}</strong></p>
+        <p>Frequency: <strong>${escapeHtml(inspection.frequency)}</strong></p>
     `;
 
     info.classList.remove("hidden");
@@ -389,7 +418,7 @@ function loadInspection() {
 
         html += `
             <div class="checklist-item">
-                <h3>${itemNumber}. ${item.requirement}</h3>
+                <h3>${itemNumber}. ${escapeHtml(item.requirement)}</h3>
 
                 <label>
                     <input type="radio" name="item${itemNumber}" value="Pass">
@@ -470,15 +499,15 @@ function loadInspectionList(type) {
 
         html += `
             <div class="inspection-list-card">
-                <h3>${name}</h3>
+                <h3>${escapeHtml(name)}</h3>
 
-                <div class="meta-row"><strong>Inspection ID:</strong> ${inspectionId}</div>
-                <div class="meta-row"><strong>Form ID:</strong> ${formId}</div>
-                <div class="meta-row"><strong>Department:</strong> ${department}</div>
-                <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
-                <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
-                <div class="meta-row"><strong>Due Date:</strong> ${dueDate || "Not Set"}</div>
-                <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+                <div class="meta-row"><strong>Inspection ID:</strong> ${escapeHtml(inspectionId)}</div>
+                <div class="meta-row"><strong>Form ID:</strong> ${escapeHtml(formId)}</div>
+                <div class="meta-row"><strong>Department:</strong> ${escapeHtml(department)}</div>
+                <div class="meta-row"><strong>Submitted By:</strong> ${escapeHtml(submittedBy || "Not published")}</div>
+                <div class="meta-row"><strong>Submitted Date:</strong> ${escapeHtml(submittedDate)}</div>
+                <div class="meta-row"><strong>Due Date:</strong> ${escapeHtml(dueDate || "Not Set")}</div>
+                <div class="meta-row"><strong>Completion:</strong> ${escapeHtml(completion)}%</div>
                 <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
                     <strong>Failures:</strong> ${failureCount}
                 </div>
@@ -486,18 +515,18 @@ function loadInspectionList(type) {
 
         if (isCompleted) {
             html += `
-                <div class="meta-row"><strong>QA Reviewer:</strong> ${qaReviewer || "Not Recorded"}</div>
-                <div class="meta-row"><strong>QA Review Date:</strong> ${qaReviewDate || "Not Recorded"}</div>
-                <div class="meta-row"><strong>QA Comments:</strong> ${qaComments || "None"}</div>
+                <div class="meta-row"><strong>QA Reviewer:</strong> ${escapeHtml(qaReviewer || "Not Recorded")}</div>
+                <div class="meta-row"><strong>QA Review Date:</strong> ${escapeHtml(qaReviewDate || "Not Recorded")}</div>
+                <div class="meta-row"><strong>QA Comments:</strong> ${escapeHtml(qaComments || "None")}</div>
             `;
         }
 
         html += `
-                <span class="status-pill ${statusClass(status)}">${status}</span>
+                <span class="status-pill ${statusClass(status)}">${escapeHtml(status)}</span>
 
                 <br>
 
-                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', '${type}')">
+                <button class="detail-button" data-action="view-inspection" data-inspection-id="${escapeAttribute(inspectionId)}" data-return-type="${escapeAttribute(type)}">
                     View Details
                 </button>
             </div>
@@ -540,24 +569,24 @@ function loadQAReviewList() {
 
         html += `
             <div class="inspection-list-card">
-                <h3>${name}</h3>
+                <h3>${escapeHtml(name)}</h3>
 
-                <div class="meta-row"><strong>Inspection ID:</strong> ${inspectionId}</div>
-                <div class="meta-row"><strong>Form ID:</strong> ${formId}</div>
-                <div class="meta-row"><strong>Department:</strong> ${department}</div>
-                <div class="meta-row"><strong>Submitted By:</strong> ${submittedBy}</div>
-                <div class="meta-row"><strong>Submitted Date:</strong> ${submittedDate}</div>
-                <div class="meta-row"><strong>Due Date:</strong> ${dueDate || "Not Set"}</div>
-                <div class="meta-row"><strong>Completion:</strong> ${completion}%</div>
+                <div class="meta-row"><strong>Inspection ID:</strong> ${escapeHtml(inspectionId)}</div>
+                <div class="meta-row"><strong>Form ID:</strong> ${escapeHtml(formId)}</div>
+                <div class="meta-row"><strong>Department:</strong> ${escapeHtml(department)}</div>
+                <div class="meta-row"><strong>Submitted By:</strong> ${escapeHtml(submittedBy || "Not published")}</div>
+                <div class="meta-row"><strong>Submitted Date:</strong> ${escapeHtml(submittedDate)}</div>
+                <div class="meta-row"><strong>Due Date:</strong> ${escapeHtml(dueDate || "Not Set")}</div>
+                <div class="meta-row"><strong>Completion:</strong> ${escapeHtml(completion)}%</div>
                 <div class="meta-row ${failureCount > 0 ? "failure-row" : ""}">
                     <strong>Failures:</strong> ${failureCount}
                 </div>
 
-                <span class="status-pill ${statusClass(status)}">${status}</span>
+                <span class="status-pill ${statusClass(status)}">${escapeHtml(status)}</span>
 
                 <br>
 
-                <button class="detail-button" onclick="viewInspectionDetails('${inspectionId}', 'qa')">
+                <button class="detail-button" data-action="view-inspection" data-inspection-id="${escapeAttribute(inspectionId)}" data-return-type="qa">
                     Review Inspection
                 </button>
             </div>
@@ -626,23 +655,23 @@ function viewInspectionDetails(inspectionId, returnType) {
 
     let html = `
         <div class="inspection-info">
-            <h3>${name}</h3>
-            <p><strong>Inspection ID:</strong> ${inspectionId}</p>
-            <p><strong>Form ID:</strong> ${formId}</p>
-            <p><strong>Department:</strong> ${department}</p>
-            <p><strong>Submitted By:</strong> ${submittedBy}</p>
-            <p><strong>Submitted Date:</strong> ${submittedDate}</p>
-            <p><strong>Due Date:</strong> ${dueDate || "Not Set"}</p>
-            <p><strong>Completion:</strong> ${completion}%</p>
+            <h3>${escapeHtml(name)}</h3>
+            <p><strong>Inspection ID:</strong> ${escapeHtml(inspectionId)}</p>
+            <p><strong>Form ID:</strong> ${escapeHtml(formId)}</p>
+            <p><strong>Department:</strong> ${escapeHtml(department)}</p>
+            <p><strong>Submitted By:</strong> ${escapeHtml(submittedBy || "Not published")}</p>
+            <p><strong>Submitted Date:</strong> ${escapeHtml(submittedDate)}</p>
+            <p><strong>Due Date:</strong> ${escapeHtml(dueDate || "Not Set")}</p>
+            <p><strong>Completion:</strong> ${escapeHtml(completion)}%</p>
             <p class="${failureCount > 0 ? "failure-row" : ""}"><strong>Failures:</strong> ${failureCount}</p>
-            <p><strong>Status:</strong> ${status}</p>
+            <p><strong>Status:</strong> ${escapeHtml(status)}</p>
     `;
 
     if (status === "Approved" || status === "Rejected") {
         html += `
-            <p><strong>QA Reviewer:</strong> ${qaReviewer || "Not Recorded"}</p>
-            <p><strong>QA Review Date:</strong> ${qaReviewDate || "Not Recorded"}</p>
-            <p><strong>QA Comments:</strong> ${qaComments || "None"}</p>
+            <p><strong>QA Reviewer:</strong> ${escapeHtml(qaReviewer || "Not Recorded")}</p>
+            <p><strong>QA Review Date:</strong> ${escapeHtml(qaReviewDate || "Not Recorded")}</p>
+            <p><strong>QA Comments:</strong> ${escapeHtml(qaComments || "None")}</p>
         `;
     }
 
@@ -665,10 +694,10 @@ function viewInspectionDetails(inspectionId, returnType) {
 
             html += `
                 <div class="response-card ${responseClass(answer)}">
-                    <h3>${checklistItem}</h3>
-                    <div class="meta-row"><strong>Requirement:</strong> ${requirement}</div>
-                    <div class="meta-row"><strong>Response:</strong> ${answer}</div>
-                    <div class="meta-row"><strong>Comment:</strong> ${comment || "None"}</div>
+                    <h3>${escapeHtml(checklistItem)}</h3>
+                    <div class="meta-row"><strong>Requirement:</strong> ${escapeHtml(requirement)}</div>
+                    <div class="meta-row"><strong>Response:</strong> ${escapeHtml(answer)}</div>
+                    <div class="meta-row"><strong>Comment:</strong> ${escapeHtml(comment || "None")}</div>
                 </div>
             `;
         });
@@ -685,11 +714,11 @@ function viewInspectionDetails(inspectionId, returnType) {
                     rows="4"
                     placeholder="Enter QA comments"></textarea>
 
-                <button class="approve-button" onclick="approveInspection('${inspectionId}')">
+                <button class="approve-button" data-action="approve-inspection" data-inspection-id="${escapeAttribute(inspectionId)}">
                     Approve Inspection
                 </button>
 
-                <button class="reject-button" onclick="rejectInspection('${inspectionId}')">
+                <button class="reject-button" data-action="reject-inspection" data-inspection-id="${escapeAttribute(inspectionId)}">
                     Reject Inspection
                 </button>
 
@@ -719,9 +748,6 @@ function generateReport() {
         return;
     }
 
-    const startDate = new Date(startDateValue + "T00:00:00");
-    const endDate = new Date(endDateValue + "T23:59:59");
-
     let filteredRecords = inspectionRecords.filter(record => {
         const submittedDateValue = getRecordValue(record, ["SubmittedDate", "Submitted Date"]);
 
@@ -729,9 +755,9 @@ function generateReport() {
             return false;
         }
 
-        const submittedDate = new Date(submittedDateValue);
+        const submittedDate = getBusinessDateKey(submittedDateValue);
 
-        if (submittedDate < startDate || submittedDate > endDate) {
+        if (!submittedDate || submittedDate < startDateValue || submittedDate > endDateValue) {
             return false;
         }
 
@@ -830,10 +856,10 @@ function generateReport() {
                 <h2>Report Information</h2>
                 <p><strong>Report Date:</strong> ${formatDate(new Date())}</p>
                 <p><strong>Reporting Period:</strong> ${formatDateOnly(startDateValue)} through ${formatDateOnly(endDateValue)}</p>
-                <p><strong>Department:</strong> ${departmentFilter}</p>
-                <p><strong>Inspection:</strong> ${inspectionFilter}</p>
-                <p><strong>Status:</strong> ${statusFilter}</p>
-                <p><strong>Report Type:</strong> ${getReportTypeLabel(reportType)}</p>
+                <p><strong>Department:</strong> ${escapeHtml(departmentFilter)}</p>
+                <p><strong>Inspection:</strong> ${escapeHtml(inspectionFilter)}</p>
+                <p><strong>Status:</strong> ${escapeHtml(statusFilter)}</p>
+                <p><strong>Report Type:</strong> ${escapeHtml(getReportTypeLabel(reportType))}</p>
             </div>
 
             <div class="report-section">
@@ -912,7 +938,7 @@ function generateReport() {
                             <div><strong>Department:</strong> ${escapeHtml(department)}</div>
                             <div><strong>Status:</strong> ${escapeHtml(status)}</div>
                             <div><strong>Submitted:</strong> ${escapeHtml(submittedDate)}</div>
-                            <div><strong>Submitted By:</strong> ${escapeHtml(submittedBy)}</div>
+                            <div><strong>Submitted By:</strong> ${escapeHtml(submittedBy || "Not published")}</div>
                             <div><strong>Due Date:</strong> ${escapeHtml(dueDate || "Not Set")}</div>
                             <div><strong>Completion:</strong> ${escapeHtml(completion)}%</div>
                             <div><strong>Failures:</strong> ${failureCount}</div>
@@ -1041,18 +1067,10 @@ function isPastDue(record) {
         return false;
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = getBusinessDateKey(new Date());
+    const dueDate = getBusinessDateKey(dueDateValue);
 
-    const dueDate = parseDateValue(dueDateValue);
-
-    if (isNaN(dueDate.getTime())) {
-        return false;
-    }
-
-    dueDate.setHours(0, 0, 0, 0);
-
-    return dueDate < today;
+    return Boolean(dueDate) && dueDate < today;
 }
 
 function approveInspection(inspectionId) {
@@ -1074,19 +1092,12 @@ function rejectInspection(inspectionId) {
 
 function submitQAReview(inspectionId, decision) {
     const comments = document.getElementById("qaComments")?.value || "";
-    const reviewDate = new Date().toLocaleDateString("en-US");
-    const reviewer = "Dennis Barr";
-
     const qaFormUrl =
         "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=3JG89IfD0E6e175TItrr8LO9tidJOFRAtBCVSjfTIJdUQUFQUDFJSVowOVpIREM1RlJEUTJQUzMxVi4u" +
         "&r74f9b757fd384314b10657196e52b8d3=" +
         encodeURIComponent(inspectionId) +
         "&r51900abbe1134ba49bb1161d1ee25b72=" +
         encodeURIComponent(decision) +
-        "&r71ed9222d2d4423db637e10e5c7d7571=" +
-        encodeURIComponent(reviewer) +
-        "&r170cdb462c9c4aa79acce5b7d531cd81=" +
-        encodeURIComponent(reviewDate) +
         "&r48621006bdef491cb6110340f090d784=" +
         encodeURIComponent(comments);
 
@@ -1102,11 +1113,23 @@ function submitQAReview(inspectionId, decision) {
 }
 
 function getFailureCount(inspectionId) {
-    return inspectionResponses.filter(response => {
+    return failureCountsByInspection.get(String(inspectionId)) || 0;
+}
+
+function buildFailureCountIndex(responses) {
+    const counts = new Map();
+
+    responses.forEach(response => {
         const responseInspectionId = getRecordValue(response, ["InspectionID", "InspectionIDText", "Inspection ID", "Inspection"]);
         const answer = getRecordValue(response, ["Response", "Response Value"]);
-        return responseInspectionId === inspectionId && answer === "Fail";
-    }).length;
+
+        if (answer === "Fail" && responseInspectionId) {
+            const key = String(responseInspectionId);
+            counts.set(key, (counts.get(key) || 0) + 1);
+        }
+    });
+
+    return counts;
 }
 
 function getRecordValue(record, possibleNames) {
@@ -1117,17 +1140,6 @@ function getRecordValue(record, possibleNames) {
     }
 
     return "";
-}
-
-function setRecordValue(record, possibleNames, value) {
-    for (const name of possibleNames) {
-        if (record[name] !== undefined) {
-            record[name] = value;
-            return;
-        }
-    }
-
-    record[possibleNames[0]] = value;
 }
 
 function statusClass(status) {
@@ -1155,35 +1167,11 @@ function responseClass(response) {
 }
 
 function formatDate(value) {
-    if (!value) {
-        return "";
-    }
-
-    const date = new Date(value);
-
-    if (isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleString("en-US");
+    return formatBusinessDateTime(value);
 }
 
 function formatDateOnly(value) {
-    if (!value) {
-        return "";
-    }
-
-    const date = parseDateValue(value);
-
-    if (isNaN(date.getTime())) {
-        return value;
-    }
-
-    return date.toLocaleDateString("en-US");
-}
-
-function formatInputDate(date) {
-    return date.toISOString().split("T")[0];
+    return formatBusinessDate(value);
 }
 
 function escapeHtml(value) {
@@ -1193,20 +1181,6 @@ function escapeHtml(value) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
-}
-
-function parseDateValue(value) {
-    const dateOnlyMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-    if (dateOnlyMatch) {
-        return new Date(
-            Number(dateOnlyMatch[1]),
-            Number(dateOnlyMatch[2]) - 1,
-            Number(dateOnlyMatch[3])
-        );
-    }
-
-    return new Date(value);
 }
 
 function escapeAttribute(value) {

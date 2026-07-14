@@ -3,69 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
     <title>QCMS - QA Compliance Management System</title>
     <link rel="stylesheet" href="styles.css">
 
-    <style>
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-card {
-            background: linear-gradient(145deg, #111827, #1e293b);
-            border: 1px solid #475569;
-            border-radius: 16px;
-            padding: 24px 18px;
-            text-align: center;
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform .2s, border-color .2s, box-shadow .2s;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-4px);
-            border-color: #93c5fd;
-            box-shadow: 0 16px 32px rgba(37, 99, 235, 0.25);
-        }
-
-        .dashboard-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 6px;
-            width: 100%;
-            background: #2563eb;
-        }
-
-        .dashboard-card:nth-child(2)::before { background: #f97316; }
-        .dashboard-card:nth-child(3)::before { background: #22c55e; }
-        .dashboard-card:nth-child(4)::before { background: #ef4444; }
-        .dashboard-card:nth-child(5)::before { background: #eab308; }
-        .dashboard-card:nth-child(6)::before { background: #dc2626; }
-        .dashboard-card:nth-child(7)::before { background: #14b8a6; }
-        .dashboard-card:nth-child(8)::before { background: #8b5cf6; }
-
-        .dashboard-number {
-            font-size: 42px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .dashboard-label {
-            color: #cbd5e1;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-        }
-    </style>
 </head>
 <body>
 
@@ -80,42 +22,42 @@
 
         <div class="dashboard-grid">
 
-            <button class="dashboard-card" data-tone="blue" onclick="showInspectionQueue('open')">
+            <button class="dashboard-card" data-tone="blue" data-action="show-queue" data-filter="open">
                 <div class="dashboard-number" id="openCount">0</div>
                 <div class="dashboard-label">Open Inspections</div>
             </button>
 
-            <button class="dashboard-card" data-tone="orange" onclick="showQAReview()">
+            <button class="dashboard-card" data-tone="orange" data-action="show-qa">
                 <div class="dashboard-number" id="qaCount">0</div>
                 <div class="dashboard-label">Awaiting QA</div>
             </button>
 
-            <button class="dashboard-card" data-tone="green" onclick="showInspectionQueue('approved')">
+            <button class="dashboard-card" data-tone="green" data-action="show-queue" data-filter="approved">
                 <div class="dashboard-number" id="approvedCount">0</div>
                 <div class="dashboard-label">Approved</div>
             </button>
 
-            <button class="dashboard-card" data-tone="red" onclick="showInspectionQueue('rejected')">
+            <button class="dashboard-card" data-tone="red" data-action="show-queue" data-filter="rejected">
                 <div class="dashboard-number" id="rejectedCount">0</div>
                 <div class="dashboard-label">Rejected</div>
             </button>
 
-            <button class="dashboard-card" data-tone="yellow" onclick="showInspectionQueue('pastDue')">
+            <button class="dashboard-card" data-tone="yellow" data-action="show-queue" data-filter="pastDue">
                 <div class="dashboard-number" id="pastDueCount">0</div>
                 <div class="dashboard-label">Past Due</div>
             </button>
 
-            <button class="dashboard-card" data-tone="red" onclick="showInspectionQueue('failures')">
+            <button class="dashboard-card" data-tone="red" data-action="show-queue" data-filter="failures">
                 <div class="dashboard-number" id="failureCount">0</div>
                 <div class="dashboard-label">Total Failures</div>
             </button>
 
-            <button class="dashboard-card" data-tone="teal" onclick="showInspectionQueue('all')">
+            <button class="dashboard-card" data-tone="teal" data-action="show-queue" data-filter="all">
                 <div class="dashboard-number" id="onTimePercent">100%</div>
                 <div class="dashboard-label">On-Time %</div>
             </button>
 
-            <button class="dashboard-card" data-tone="violet" onclick="showInspectionQueue('all')">
+            <button class="dashboard-card" data-tone="violet" data-action="show-queue" data-filter="all">
                 <div class="dashboard-number" id="inspectionCount">0</div>
                 <div class="dashboard-label">Total Inspections</div>
             </button>
@@ -128,17 +70,17 @@
                     <h2>Needs Attention</h2>
                     <p>Past-due inspections and submitted work with failed findings.</p>
                 </div>
-                <button class="text-button" onclick="showInspectionQueue('attention')">View all</button>
+                <button class="text-button" data-action="show-queue" data-filter="attention">View all</button>
             </div>
             <div id="attentionList" class="attention-list" aria-live="polite"></div>
         </div>
 
         <div class="menu-grid">
-            <button class="menu-button" onclick="showInspection()">Start Inspection</button>
-            <button class="menu-button" onclick="showInspectionQueue('open')">Open Inspections</button>
-            <button class="menu-button" onclick="showQAReview()">QA Review</button>
-            <button class="menu-button" onclick="showCompletedInspections()">Completed Inspections</button>
-            <button class="menu-button" onclick="showReportCenter()">Generate Report Summary</button>
+            <button class="menu-button" data-action="show-inspection">Start Inspection</button>
+            <button class="menu-button" data-action="show-queue" data-filter="open">Open Inspections</button>
+            <button class="menu-button" data-action="show-qa">QA Review</button>
+            <button class="menu-button" data-action="show-completed">Completed Inspections</button>
+            <button class="menu-button" data-action="show-reports">Generate Report Summary</button>
         </div>
 
     </div>
@@ -147,11 +89,11 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <button class="back-button" data-action="home">&larr; Back to Home</button>
                 <h2>Inspection Entry</h2>
             </div>
 
-            <label><strong>Select Inspection</strong></label>
+            <label for="inspectionSelect"><strong>Select Inspection</strong></label>
 
             <select id="inspectionSelect">
                 <option value="">Select Inspection</option>
@@ -167,7 +109,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <button class="back-button" data-action="home">&larr; Back to Home</button>
                 <h2 id="inspectionQueueTitle">Open Inspections</h2>
             </div>
 
@@ -198,7 +140,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <button class="back-button" data-action="home">&larr; Back to Home</button>
                 <h2>QA Review</h2>
             </div>
 
@@ -211,7 +153,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <button class="back-button" data-action="home">&larr; Back to Home</button>
                 <h2>Completed Inspections</h2>
             </div>
 
@@ -224,7 +166,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button class="back-button" onclick="backToHome()">← Back to Home</button>
+                <button class="back-button" data-action="home">&larr; Back to Home</button>
                 <h2>Report Center</h2>
             </div>
 
@@ -276,9 +218,9 @@
             </div>
 
             <div class="report-actions">
-                <button class="detail-button" onclick="generateReport()">Generate Report</button>
-                <button class="approve-button" onclick="printReport()">Print / Save as PDF</button>
-                <button class="back-button" onclick="clearReport()">Clear Report</button>
+                <button class="detail-button" data-action="generate-report">Generate Report</button>
+                <button class="approve-button" data-action="print-report">Print / Save as PDF</button>
+                <button class="back-button" data-action="clear-report">Clear Report</button>
             </div>
 
             <div id="reportOutput" class="report-output"></div>
@@ -290,7 +232,7 @@
         <div class="inspection-card">
 
             <div class="inspection-header-row">
-                <button id="detailsBackButton" class="back-button">← Back</button>
+                <button id="detailsBackButton" class="back-button">&larr; Back</button>
                 <h2>Inspection Details</h2>
             </div>
 
@@ -301,7 +243,7 @@
 
 </main>
 
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
