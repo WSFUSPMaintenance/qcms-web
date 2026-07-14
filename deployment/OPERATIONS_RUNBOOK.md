@@ -19,6 +19,19 @@ The current primary owner and first-line support contact is **Barr, Dennis**. Al
 
 The two legacy direct-GitHub export flows (`41dc601f-e3f0-4c18-b59d-a6636d9aaef5` and `8c83e853-a88e-43a1-8e63-205d26e8f769`) must remain disabled. The placeholder-response flow (`9c80f18c-4f98-44d2-ac8c-82a556c24c39`) and superseded QA flow (`ca192e70-7c1c-451a-b498-d0aac0a4a7fa`) must also remain disabled.
 
+## Deployment solution
+
+- Display name: `USP QA Compliance Management System`
+- Unique name: `USPQAComplianceManagementSystem`
+- Solution ID: `a1ec2928-2f7f-f111-ab0e-000d3a35a18a`
+- Current environment version: `1.0.0.0`
+- Verified unmanaged export: `deployment/artifacts/USPQAComplianceManagementSystem_1_0_0_1.zip` (artifact version `1.0.0.1`, 18,458 bytes)
+- Export SHA-256: `AA573445055236C3631069949F6F3A466952DCC00262B0B7EC24D57AC508D7A3`
+- Publisher: `USP QCMS` (`USPQCMSPublisher`, prefix `qcms`, choice prefix `83420`)
+- Contents: the six active workflows listed above and three generated connection references
+
+Publish all customizations and run Solution checker before every export. The baseline analysis completed July 13, 2026 at 10:02:16 PM with no findings. The unmanaged baseline export completed successfully at 10:08 PM, was copied into the deployment artifacts directory, and its ZIP structure and checksum were verified. Disabled legacy, placeholder, and superseded flows must remain outside the production solution.
+
 ## Routine health checks
 
 1. Review the 28-day run history for every active workflow and investigate new failures.
@@ -49,10 +62,9 @@ The two legacy direct-GitHub export flows (`41dc601f-e3f0-4c18-b59d-a6636d9aaef5
 
 ## Cutover and ownership requirements
 
-- Export and archive the final Power Automate solution and connection-reference inventory.
+- Retain the checksum-verified Power Automate solution archive and connection-reference manifest with the release artifacts.
 - Add a secondary owner or governed service account to every active workflow.
 - Provision QCMS Owners, operational Members, and read-only/visitor access according to approved business roles.
 - Record the approved support distribution list and escalation contact.
 - Confirm recovery artifacts are accessible to at least two authorized administrators.
 - Record go-live approval, timestamp, solution version, and rollback point in the engineering log.
-

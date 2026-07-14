@@ -6,4 +6,6 @@
 
 The live `QCMS Generate Audit Report` flow (`c534f2d7-8187-4cee-9a5e-b389ca6059f5`) accepts Start Date and End Date inputs, applies those dates to Inspection Records, Inspection Responses, Corrective Actions, and Workflow History queries, and paginates all four reads to a 100,000-item threshold. It renders three accessible, normalized HTML sections—Inspection Responses, Corrective Actions, and Workflow History—and saves a timestamped artifact to the private `QCMS Reports` SharePoint library. Controlled run `08584176207182908895864449464CU12` completed successfully in five seconds and created `QCMS-Audit-2026-06-01-to-2026-07-13-20260713-234251.html` (11,282 bytes). Flow checker reports zero errors and zero warnings.
 
+`artifacts/USPQAComplianceManagementSystem_1_0_0_1.zip` is the checksum-verified unmanaged Power Automate deployment baseline. Its manifest, integrity hash, component scope, and import/rollback guidance are recorded in `artifacts/README.md`.
+
 `OPERATIONS_RUNBOOK.md` is the operational handoff for active flow IDs, current ownership, routine checks, incident recovery, rollback, and production cutover requirements.
