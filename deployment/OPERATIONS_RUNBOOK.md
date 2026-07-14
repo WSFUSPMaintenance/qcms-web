@@ -24,13 +24,13 @@ The two legacy direct-GitHub export flows (`41dc601f-e3f0-4c18-b59d-a6636d9aaef5
 - Display name: `USP QA Compliance Management System`
 - Unique name: `USPQAComplianceManagementSystem`
 - Solution ID: `a1ec2928-2f7f-f111-ab0e-000d3a35a18a`
-- Current environment version: `1.0.0.0`
-- Verified unmanaged export: `deployment/artifacts/USPQAComplianceManagementSystem_1_0_0_1.zip` (artifact version `1.0.0.1`, 18,458 bytes)
-- Export SHA-256: `AA573445055236C3631069949F6F3A466952DCC00262B0B7EC24D57AC508D7A3`
+- Current environment version at export: `1.0.0.1`
+- Verified unmanaged export: `deployment/artifacts/USPQAComplianceManagementSystem_1_0_0_2.zip` (artifact version `1.0.0.2`, 18,627 bytes)
+- Export SHA-256: `6F13F6CEBDA1652970FB3B424862A9C7B8673128E850CECE41BC7303DFC4645F`
 - Publisher: `USP QCMS` (`USPQCMSPublisher`, prefix `qcms`, choice prefix `83420`)
 - Contents: the six active workflows listed above and three generated connection references
 
-Publish all customizations and run Solution checker before every export. The baseline analysis completed July 13, 2026 at 10:02:16 PM with no findings. The unmanaged baseline export completed successfully at 10:08 PM, was copied into the deployment artifacts directory, and its ZIP structure and checksum were verified. Disabled legacy, placeholder, and superseded flows must remain outside the production solution.
+Publish all customizations and run Solution checker before every export. The baseline analysis completed July 13, 2026 at 10:02:16 PM with no findings. The refreshed unmanaged export completed July 14, 2026 with Solution Checker enabled, was copied into the deployment artifacts directory, and its ZIP structure, connector bindings, duplicate-replay guard, and checksum were verified. Disabled legacy, placeholder, and superseded flows must remain outside the production solution.
 
 ## Routine health checks
 

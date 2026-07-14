@@ -22,7 +22,7 @@
 ## Workflow gate
 
 - [x] Web submission stores the Microsoft Forms response ID in `ExternalSubmissionID` and ends in an explicit Processed or Failed bridge state. Controlled run validation passed July 13, 2026.
-- [x] `QCMS Web Submission Bridge.ExternalSubmissionID` is indexed and unique. A same-trigger replay was rejected without creating duplicate downstream records, and the failure-recovery action no longer attempts to update a bridge row that was never created. `Required` remains deferred until the approved test-data wipe because legacy rows contain null identifiers.
+- [x] `QCMS Web Submission Bridge.ExternalSubmissionID` is indexed and unique. The flow now queries the key before insertion and terminates duplicate trigger replays successfully; controlled automatic replay confirmed the lookup and termination succeeded while every creation action was skipped. The unique constraint remains the concurrency backstop. `Required` remains deferred until the approved test-data wipe because legacy rows contain null identifiers.
 - [x] Inspection Record remains Processing until all expected responses exist, then transitions to Awaiting QA with 100% completion and `RequiresQA=true`. Fresh Forms response `41` validated the full lifecycle July 13, 2026.
 - [x] Submit-to-QA accepts Pass, Fail, and legitimate N/A, and rejects only missing answers/count mismatches. Validated in the corrected live submission chain.
 - [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, stores the authenticated Forms responder as QA Reviewer plus server `utcNow()`, and creates failed-item corrective actions. The spoofed-identity and duplicate-decision regressions passed for `BRE001-20260714-012426`; rejection inspection 49 also passed.
@@ -44,7 +44,7 @@
 
 - [x] Create and publish the unmanaged Power Automate deployment solution. `USP QA Compliance Management System` version `1.0.0.0` contains the six active production flows and three connection references; all customizations published successfully July 13, 2026.
 - [x] Run Power Platform Solution checker. The July 13, 2026 10:02:16 PM result contained no findings.
-- [x] Export and archive the final Power Automate solution. Unmanaged artifact `USPQAComplianceManagementSystem_1_0_0_1.zip` was downloaded, copied to `deployment/artifacts`, opened successfully, and verified with SHA-256 `AA573445055236C3631069949F6F3A466952DCC00262B0B7EC24D57AC508D7A3`.
+- [x] Export and archive the final Power Automate solution. Refreshed unmanaged artifact `USPQAComplianceManagementSystem_1_0_0_2.zip` was exported with Solution Checker enabled, copied to `deployment/artifacts`, opened successfully, and verified with SHA-256 `6F13F6CEBDA1652970FB3B424862A9C7B8673128E850CECE41BC7303DFC4645F`.
 - [ ] Capture and archive a final live SharePoint schema and permissions snapshot at cutover. `deployment/sharepoint-target-schema.json` documents the target contract, but the live snapshot must be refreshed after the approved test-data wipe and final permission provisioning.
 - [x] Record flow owners, connections, support contacts, recovery procedure, and rollback plan in `OPERATIONS_RUNBOOK.md`. Secondary ownership and the approved support distribution list remain cutover requirements.
 - [ ] Enable outbound notifications only after routing tests pass.
