@@ -1,6 +1,6 @@
 # QCMS Web
 
-Static dashboard and inspection bridge for the Union Springs QA Compliance Management System. It reads sanitized JSON snapshots from `data/`, supports inspection entry through Microsoft Forms, routes QA decisions through the QA form bridge, and produces printable compliance summaries.
+Reference dashboard, test harness, and deployment repository for the Union Springs QA Compliance Management System. The production operational interface is an authenticated Power Apps canvas app connected directly to the existing QCMS SharePoint lists. This static application remains a synthetic-data UX reference, regression fixture, and printable-report prototype; it is not the production data-delivery path.
 
 ## Local verification
 
@@ -19,14 +19,12 @@ Serve the directory through an HTTP server; browser security rules prevent relia
 ## Deployment controls
 
 - Keep legacy per-item GitHub export flows disabled.
-- Publish records and responses as one serialized, paginated snapshot.
-- Do not include credentials or non-dashboard personal data in JSON exports.
+- Do not publish live SharePoint records or responses to this public repository.
+- Keep `data/` limited to synthetic, privacy-safe regression fixtures.
 - Run the security tests before every deployment.
 - Follow the credential-rotation and engineering controls in `SECURITY.md`.
 - Treat the generated sample audit as a rendering test only; a complete production package must also supply corrective actions and workflow history.
 
-## Governed snapshot publisher
+## Production interface
 
-`.github/workflows/publish-snapshots.yml` replaces the disabled per-item Power Automate exports. It runs as a single serialized job, obtains a short-lived Microsoft Graph token through GitHub-to-Entra workload identity federation, reads every page from both SharePoint lists, detects concurrent list changes, and commits both sanitized snapshots together only after the complete test suite passes.
-
-The `qcms-production` GitHub environment must define non-secret variables `QCMS_TENANT_ID` and `QCMS_CLIENT_ID`. The Entra application must trust this repository environment through a federated credential and receive least-privilege `Sites.Selected` access to only the QCMS SharePoint site. No personal access token or client secret is used by the publisher. Follow `deployment/SNAPSHOT_PUBLISHER_SETUP.md` for the one-time identity, environment, activation, and recovery procedure.
+The canvas app reads SharePoint through the standard connector already available in the tenant. It must follow `deployment/POWER_APPS_UX_SPEC.md` and `deployment/POWER_APPS_BUILD_PLAN.md`. Existing Forms and Power Automate flows remain the authoritative write and workflow paths during the UI transition.

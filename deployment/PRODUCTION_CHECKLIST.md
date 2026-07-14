@@ -28,12 +28,12 @@
 - [x] QA decision requires Awaiting QA, validates the decision, requires rejection comments, stores the authenticated Forms responder as QA Reviewer plus server `utcNow()`, and creates failed-item corrective actions. The spoofed-identity and duplicate-decision regressions passed for `BRE001-20260714-012426`; rejection inspection 49 also passed.
 - [x] Corrective actions and workflow history are created once under retry. Corrective-action closure uses unique `EventKey`; escalation retry reuses the existing row ID.
 - [x] Overdue monitoring suppresses duplicate escalation notices and has separate error handling for email. Outbound delivery remains intentionally gated pending the controlled recipient test.
-- [x] Snapshot publishing implementation is serialized, paginated, change-detecting, privacy-minimized, and commits records and responses together. The GitHub Actions workload is ready; activation remains gated on the Entra federated credential and site-specific permission grant.
+- [ ] Power Apps production dashboard reads SharePoint directly through existing standard connections; verify role-aware Home, QA Queue, Corrective Actions, Administration, delegation, and mobile behavior before go-live. Public snapshot publishing has been retired by architecture decision.
 - [x] Audit package uses requested dates, paginates all four SharePoint sources, renders normalized Inspection Responses, Corrective Actions, and Workflow History sections, and saves a controlled timestamped HTML artifact with metadata to the private QCMS Reports library. Controlled run `08584176207182908895864449464CU12` passed July 13, 2026.
 
 ## Go-live data gate
 
-- [x] Validate catalog, checklist, schedule, security, workflow policy, dashboard snapshots, audit rendering, the governed snapshot publisher, and the archived solution with `npm test`. All 29 tests passed July 14, 2026.
+- [x] Validate catalog, checklist, schedule, security, workflow policy, synthetic dashboard fixtures, audit rendering, and the archived solution with `npm test`. All 24 applicable repository tests passed after retiring public snapshot publishing.
 - [x] Review `initial-inspection-schedule.csv` and import only after ScheduleKey uniqueness is enabled. All 785 unique schedule rows were imported after the constraint and indexes were verified.
 - [x] Confirm August 1, 2026 baseline and responsible department managers. The 785-row schedule begins August 1, 2026, and all four catalog departments have active primary, QA, and backup routing.
 - [ ] Clear test records using the approved retention/backup procedure.
